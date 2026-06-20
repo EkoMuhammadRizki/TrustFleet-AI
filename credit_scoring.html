@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TrustFleet AI - Detail Skor Kredit</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+        }
+        .gauge-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+        }
+        .gauge-svg {
+            transform: rotate(-90deg);
+        }
+        .gauge-track {
+            fill: none;
+            stroke: #E5E7EB;
+            stroke-width: 12;
+        }
+        .gauge-fill {
+            fill: none;
+            stroke: url(#gaugeGradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            stroke-dasharray: 628; /* 2 * PI * 100 */
+            stroke-dashoffset: 628;
+            transition: stroke-dashoffset 1.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#dde1ff",
+                        "surface-container-low": "#eff4ff",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#003ada",
+                        "alert-red": "#DF2721",
+                        "secondary": "#4f5c91",
+                        "on-tertiary-fixed-variant": "#483b85",
+                        "on-primary-container": "#b5c0ff",
+                        "sky-blue": "#C5E1EF",
+                        "primary-fixed-dim": "#b9c3ff",
+                        "on-primary-fixed-variant": "#0033c2",
+                        "surface-white": "#FFFFFF",
+                        "background-subtle": "#FAFAFC",
+                        "on-surface": "#0b1c30",
+                        "background": "#f8f9ff",
+                        "inverse-primary": "#b9c3ff",
+                        "outline": "#747687",
+                        "on-secondary-container": "#414e82",
+                        "surface-tint": "#234be8",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#c6baff",
+                        "on-secondary": "#ffffff",
+                        "warning-amber": "#F2A93C",
+                        "surface-variant": "#d3e4ff",
+                        "surface-dim": "#cbdbf6",
+                        "primary-fixed": "#dee1ff",
+                        "on-error-container": "#93000a",
+                        "primary": "#0029a1",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c4c5d8",
+                        "tertiary-fixed-dim": "#cabeff",
+                        "tertiary-fixed": "#e6deff",
+                        "surface-container-high": "#dce9ff",
+                        "success-green": "#1FA463",
+                        "on-background": "#0b1c30",
+                        "secondary-container": "#b4c1fd",
+                        "on-secondary-fixed-variant": "#374477",
+                        "secondary-fixed-dim": "#b7c4ff",
+                        "on-secondary-fixed": "#07174a",
+                        "tertiary-container": "#524590",
+                        "surface-container": "#e6eeff",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-surface": "#213146",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#444655",
+                        "on-primary-fixed": "#001258",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#3b2d77",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#1c0858"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "card": "24px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "container-max": "1440px",
+                        "margin-mobile": "16px",
+                        "sidebar-width": "280px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "data-display": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "title-lg": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "data-display": ["28px", {"lineHeight": "1", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+<!-- Side Navigation -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-[#061649] flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-md text-headline-md font-bold text-surface-white">TrustFleet AI</h1>
+<p class="text-[12px] uppercase tracking-widest text-on-primary-container/60 font-semibold">Kecerdasan Fintech</p>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-full mx-2 hover:bg-surface-variant/10 transition-colors text-white/70" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dasbor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full mx-2 hover:bg-surface-variant/10 transition-colors text-white/70" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-body-md">Pelanggan 360</span>
+</a>
+<!-- Active -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-full bg-primary-container mx-2 scale-95 duration-150 text-white" href="#">
+<span class="material-symbols-outlined">credit_score</span>
+<span class="font-body-md">Skor Kredit</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full mx-2 hover:bg-surface-variant/10 transition-colors text-white/70" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md">Analisis Risiko</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-full mx-2 hover:bg-surface-variant/10 transition-colors text-white/70" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Laporan</span>
+</a><a class="flex items-center gap-3 px-4 py-3 rounded-full mx-2 hover:bg-surface-variant/10 transition-colors text-white/70" href="#"><span class="material-symbols-outlined">settings</span><span class="font-body-md">Pengaturan</span></a>
+</div>
+<div class="mt-auto px-4 py-6 mx-2"><div class="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center gap-3"><div class="flex items-center gap-3 flex-grow overflow-hidden"><div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold text-sm flex-shrink-0">MS</div><div class="overflow-hidden"><p class="font-label-md text-label-md truncate text-white">Marcus Sterling</p><p class="text-[10px] truncate text-white/70">Petugas Risiko</p></div></div><button class="text-white/70 hover:text-white transition-colors ml-auto"><span class="material-symbols-outlined">logout</span></button></div></div></nav>
+<!-- Top Navigation -->
+<header class="fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface-white shadow-sm flex justify-between items-center px-8 z-40 border-b border-outline-variant/30">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-full w-96">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full" placeholder="Cari armada atau ID pelanggan..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface">Alex Thompson</p>
+<p class="text-[10px] text-on-surface-variant">Chief Risk Officer</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A professional headshot of a middle-aged male executive" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATvdSIRRwhUHTS199ympzu4rTY63dBKW48WK5PgOE62hK1evabPonzWFtSxGqLpo2JjXdmAYuu2TMFX4IyY-6Ds3v6P0UQFtKRn0fo17hsnYC4B4wSMM2kf59BMNrR-MDCuVBgcTmP_lW3cJhqhBHDOnVoVdyPI4iYL48qsSrXfvekCUMEdTZbCP_PCgmAh88xCF0EeggC1U19tY0-phBk15LeFclnwse2uGKxUuxC-5KAOCjTLjtJSHgzTdDjDemlmMEcSsOLUyw"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-sidebar-width pt-24 px-8 pb-12 max-w-[1440px]">
+<!-- Header Section -->
+<div class="mb-8 flex justify-between items-end">
+<div class="animate-fade-in" style="animation-delay: 0.1s;">
+<nav class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="text-label-md">Skor Kredit</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-label-md text-primary font-bold">PT. Transportasi Maju Jaya</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Detail Skor Kredit</h2>
+</div>
+<div class="flex gap-3 animate-fade-in" style="animation-delay: 0.2s;">
+<button class="px-6 py-2.5 rounded-full border border-primary text-primary font-semibold hover:bg-primary/5 transition-all text-body-md">
+                    Unduh Laporan
+                </button>
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-white font-semibold shadow-lg shadow-primary-container/20 hover:scale-105 transition-all text-body-md">
+                    Ajukan Peninjauan
+                </button>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Column 1: Credit Score Gauge & Summary -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Gauge Card -->
+<div class="bg-surface-white p-8 rounded-card shadow-sm flex flex-col items-center justify-center animate-fade-in" style="animation-delay: 0.3s;">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-8">Skor Kepercayaan</h3>
+<div class="gauge-container mb-4">
+<svg class="gauge-svg w-full h-full" viewbox="0 0 220 220">
+<defs>
+<lineargradient id="gaugeGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#DF2721"></stop>
+<stop offset="50%" stop-color="#F2A93C"></stop>
+<stop offset="100%" stop-color="#1FA463"></stop>
+</lineargradient>
+</defs>
+<circle class="gauge-track" cx="110" cy="110" r="100"></circle>
+<circle class="gauge-fill" cx="110" cy="110" id="score-circle" r="100" style="stroke-dashoffset: 628;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-on-surface">785</span>
+<span class="font-label-md text-label-md text-success-green uppercase tracking-widest mt-[-4px]">SANGAT BAIK</span>
+</div>
+</div>
+<p class="text-center text-on-surface-variant font-body-md max-w-[240px] mt-4">
+                        Peningkatan <span class="text-success-green font-bold">+12 poin</span> dibanding bulan lalu.
+                    </p>
+</div>
+<!-- Recommendation Card -->
+<div class="rounded-card p-8 text-white relative overflow-hidden animate-fade-in" style="animation-delay: 0.4s; background: linear-gradient(135deg, #061649 0%, #003ADA 100%);">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<h3 class="font-title-lg text-title-lg">Rekomendasi Kredit</h3>
+<span class="px-4 py-1 rounded-full bg-success-green/20 text-success-green border border-success-green/30 text-xs font-bold tracking-wider">DISETUJUI</span>
+</div>
+<p class="text-on-primary-container font-body-md mb-2">Limit Kredit yang Disarankan:</p>
+<h4 class="font-headline-md text-headline-md mb-6">Rp 2.450.000.000</h4>
+<div class="bg-white/10 p-4 rounded-xl border border-white/10">
+<p class="text-body-md text-on-primary-container leading-relaxed">
+                                Berdasarkan analisis AI, entitas menunjukkan likuiditas yang stabil dan rekam jejak pembayaran tepat waktu selama 24 bulan terakhir.
+                            </p>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-sky-blue/10 rounded-full blur-3xl"></div>
+</div>
+</div>
+<!-- Column 2: Explainable AI Factors -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter">
+<div class="bg-surface-white p-8 rounded-card shadow-sm h-full animate-fade-in" style="animation-delay: 0.5s;">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Mengapa skor ini?</h3>
+<p class="text-on-surface-variant text-sm mb-2 font-medium">Analisis faktor pendorong kepercayaan (Explainable AI)</p>
+</div>
+<div class="flex items-center gap-1 text-primary font-bold cursor-pointer hover:underline whitespace-nowrap ml-auto">
+<span class="text-label-md">LIHAT SEMUA DATA</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</div>
+</div>
+<div class="space-y-8">
+<!-- Factor 1 -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md font-semibold text-on-surface">Frekuensi Servis (Kesehatan Armada)</span>
+<span class="text-label-md text-success-green">+ 45 Pts</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-success-green h-full rounded-full transition-all duration-1000" style="width: 85%;"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-2 italic">Armada dirawat secara rutin setiap 5.000km di bengkel resmi.</p>
+</div>
+<!-- Factor 2 -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md font-semibold text-on-surface">Volume Pembelian Suku Cadang</span>
+<span class="text-label-md text-success-green">+ 32 Pts</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-success-green h-full rounded-full transition-all duration-1000" style="width: 70%;"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-2 italic">Volume pembelian suku cadang asli meningkat 15% QOQ.</p>
+</div>
+<!-- Factor 3 -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md font-semibold text-on-surface">Tingkat Utilisasi Armada</span>
+<span class="text-label-md text-success-green">+ 28 Pts</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-success-green h-full rounded-full transition-all duration-1000" style="width: 92%;"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-2 italic">92% armada beroperasi aktif secara harian, menunjukkan efisiensi tinggi.</p>
+</div>
+<!-- Factor 4 (Negative) -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md font-semibold text-on-surface">Konsistensi Pembayaran (Tren Pembayaran)</span>
+<span class="text-label-md text-alert-red">- 12 Pts</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-alert-red h-full rounded-full transition-all duration-1000" style="width: 15%;"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-2 italic">Ada 2 transaksi dengan keterlambatan pembayaran &lt; 3 hari di bulan lalu.</p>
+</div>
+<!-- Factor 5 -->
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="font-body-md font-semibold text-on-surface">Skor Loyalitas</span>
+<span class="text-label-md text-success-green">+ 50 Pts</span>
+</div>
+<div class="w-full bg-surface-container h-3 rounded-full overflow-hidden">
+<div class="bg-success-green h-full rounded-full transition-all duration-1000" style="width: 95%;"></div>
+</div>
+<p class="text-[12px] text-on-surface-variant mt-2 italic">Hubungan kerja sama selama 5+ tahun tanpa sengketa hukum.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Row 2: Detailed Stats Bento Grid -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-gutter animate-fade-in" style="animation-delay: 0.6s;">
+<div class="bg-surface-white p-6 rounded-card shadow-sm border border-outline-variant/20 flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-md">Total Ukuran Armada</p>
+<h5 class="text-headline-md font-bold text-on-surface">142 Unit</h5>
+</div>
+</div>
+<div class="bg-surface-white p-6 rounded-card shadow-sm border border-outline-variant/20 flex items-center gap-4">
+<div class="w-12 h-12 bg-warning-amber/10 rounded-full flex items-center justify-center text-warning-amber">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-md">Siklus Pembayaran (Rerata)</p>
+<h5 class="text-headline-md font-bold text-on-surface">14 Hari</h5>
+</div>
+</div>
+<div class="bg-surface-white p-6 rounded-card shadow-sm border border-outline-variant/20 flex items-center gap-4">
+<div class="w-12 h-12 bg-success-green/10 rounded-full flex items-center justify-center text-success-green">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-on-surface-variant text-label-md">Pertumbuhan Pendapatan</p>
+<h5 class="text-headline-md font-bold text-on-surface">+18.5%</h5>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Animate the credit score gauge on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const circle = document.getElementById('score-circle');
+            const score = 785;
+            const maxScore = 1000;
+            const percentage = score / maxScore;
+            const circumference = 2 * Math.PI * 100;
+            const offset = circumference - (percentage * circumference);
+            
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 500);
+        });
+
+        // Search bar micro-interaction
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary/20', 'border-primary/30');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary/20', 'border-primary/30');
+        });
+    </script>
+</body></html>

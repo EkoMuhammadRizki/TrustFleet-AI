@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ---- Colors (from Stitch design system) ---- */
+  --color-primary: #0029a1;
+  --color-primary-container: #003ada;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #b5c0ff;
+  --color-primary-fixed: #dee1ff;
+  --color-primary-fixed-dim: #b9c3ff;
+  --color-on-primary-fixed: #001258;
+  --color-on-primary-fixed-variant: #0033c2;
+
+  --color-secondary: #4f5c91;
+  --color-secondary-container: #b4c1fd;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #414e82;
+  --color-secondary-fixed: #dde1ff;
+  --color-secondary-fixed-dim: #b7c4ff;
+  --color-on-secondary-fixed: #07174a;
+  --color-on-secondary-fixed-variant: #374477;
+
+  --color-tertiary: #3b2d77;
+  --color-tertiary-container: #524590;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-container: #c6baff;
+  --color-tertiary-fixed: #e6deff;
+  --color-tertiary-fixed-dim: #cabeff;
+  --color-on-tertiary-fixed: #1c0858;
+  --color-on-tertiary-fixed-variant: #483b85;
+
+  --color-surface: #f8f9ff;
+  --color-surface-dim: #cbdbf6;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #eff4ff;
+  --color-surface-container: #e6eeff;
+  --color-surface-container-high: #dce9ff;
+  --color-surface-container-highest: #d3e4ff;
+  --color-surface-variant: #d3e4ff;
+  --color-surface-tint: #234be8;
+  --color-surface-white: #FFFFFF;
+
+  --color-background: #f8f9ff;
+  --color-background-subtle: #FAFAFC;
+  --color-on-background: #0b1c30;
+  --color-on-surface: #0b1c30;
+  --color-on-surface-variant: #444655;
+
+  --color-outline: #747687;
+  --color-outline-variant: #c4c5d8;
+
+  --color-inverse-surface: #213146;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-inverse-primary: #b9c3ff;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-success-green: #1FA463;
+  --color-warning-amber: #F2A93C;
+  --color-alert-red: #DF2721;
+
+  --color-deep-navy: #061649;
+  --color-accent-blue: #003ADA;
+  --color-sky-blue: #C5E1EF;
+
+  /* ---- Fonts ---- */
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-inter: "Inter", sans-serif;
+
+  /* ---- Spacing ---- */
+  --spacing-sidebar-width: 280px;
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 32px;
+  --spacing-container-max: 1440px;
+
+  /* ---- Border Radius ---- */
+  --radius-card: 24px;
+  --radius-pill: 9999px;
+
+  /* ---- Animations ---- */
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-morph: morph 8s ease-in-out infinite;
+  --animate-slide-in-right: slide-in-right 0.3s ease-out forwards;
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes morph {
+    0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+}
+
+/* ---- Material Symbols ---- */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ---- Gradients ---- */
+.sidebar-gradient {
+  background: linear-gradient(180deg, #061649 0%, #030d2b 100%);
+}
+.kpi-card-gradient {
+  background: linear-gradient(135deg, #061649 0%, #003ADA 100%);
+}
+.nexus-gradient {
+  background: linear-gradient(135deg, #061649 0%, #003ADA 100%);
+}
+.navy-gradient {
+  background: linear-gradient(135deg, #061649 0%, #003ada 100%);
+}
+
+/* ---- Glass Effects ---- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ---- Organic Blob ---- */
+.organic-blob {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  animation: morph 8s ease-in-out infinite;
+}
+
+/* ---- Gauge ---- */
+.gauge-svg {
+  transform: rotate(-90deg);
+}
+.gauge-track {
+  fill: none;
+  stroke: #E5E7EB;
+  stroke-width: 12;
+}
+.gauge-fill {
+  fill: none;
+  stroke: url(#gaugeGradient);
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 628;
+  stroke-dashoffset: 628;
+  transition: stroke-dashoffset 1.5s ease-out;
+}
+.gauge-circle-bg {
+  stroke: rgba(255,255,255,0.1);
+}
+.gauge-circle-val {
+  stroke: #1FA463;
+  stroke-dasharray: 251.2;
+  stroke-dashoffset: calc(251.2 - (251.2 * 81.2) / 100);
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+/* ---- Donut ---- */
+.donut-segment {
+  transition: stroke-dashoffset 1s ease-out;
+}
+
+/* ---- Custom Scrollbar ---- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c4c5d8;
+  border-radius: 10px;
+}
+
+/* ---- Card Shadows ---- */
+.pill-shadow {
+  box-shadow: 0 4px 12px rgba(0, 58, 218, 0.04);
+}
+
+/* ---- Base styles ---- */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background-color: #FAFAFC;
+  font-family: "Inter", sans-serif;
+  color: #0b1c30;
+}
+
+/* ---- Toast Animation ---- */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+.toast-enter {
+  animation: toast-in 0.3s ease-out forwards;
+}
+.toast-exit {
+  animation: toast-out 0.3s ease-in forwards;
+}
+
+/* ---- Modal ---- */
+.modal-backdrop {
+  animation: fade-in-backdrop 0.2s ease-out forwards;
+}
+@keyframes fade-in-backdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal-content {
+  animation: modal-scale-in 0.3s ease-out forwards;
+}
+@keyframes modal-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
