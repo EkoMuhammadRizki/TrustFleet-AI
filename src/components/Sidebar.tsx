@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import Swal from "sweetalert2";
 
 const navItems = [
   { href: "/dashboard", icon: "dashboard", label: "Dashboard" },
@@ -21,6 +22,27 @@ export default function Sidebar() {
     return pathname.startsWith(href);
   };
 
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Apakah Anda yakin ingin keluar?",
+      text: "Anda akan diarahkan kembali ke halaman utama.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003ada",
+      cancelButtonColor: "#747687",
+      confirmButtonText: "Ya, keluar",
+      cancelButtonText: "Batal",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/";
+      }
+    });
+  };
+
   return (
     <aside className="fixed left-0 top-0 h-screen w-[280px] sidebar-gradient text-white flex flex-col py-6 z-50">
       {/* Brand */}
@@ -28,7 +50,7 @@ export default function Sidebar() {
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="w-12 h-12 relative">
             <Image
-              src="/logo/TrustFleetAILogoWhite.png"
+              src="/logo/TrustFleetAILogoNavy.png"
               alt="TrustFleet AI Logo"
               fill
               className="object-contain"
@@ -76,7 +98,7 @@ export default function Sidebar() {
             <p className="font-[var(--font-inter)] font-bold text-sm truncate text-white">Marcus Sterling</p>
             <p className="text-[12px] truncate text-white/70">Petugas Risiko</p>
           </div>
-          <Link href="/" className="material-symbols-outlined text-white/40 hover:text-white transition-colors">
+          <Link href="/" onClick={handleLogout} className="material-symbols-outlined text-white/40 hover:text-white transition-colors">
             logout
           </Link>
         </div>

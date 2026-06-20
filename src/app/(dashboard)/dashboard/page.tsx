@@ -15,7 +15,7 @@ export default function DashboardPage() {
           <h2 className="font-[var(--font-jakarta)] text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-[#0b1c30]">Ringkasan Kecerdasan Armada</h2>
           <p className="font-[var(--font-inter)] text-[14px] text-[#444655] mt-1">Penilaian risiko kredit alternatif real-time untuk portofolio armada Anda.</p>
         </div>
-        <button className="bg-[#003ada] text-white font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-md active:scale-95">
+        <button suppressHydrationWarning={true} className="bg-[#003ada] text-white font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-md active:scale-95">
           <span className="material-symbols-outlined text-[20px]">add</span>
           Penilaian Risiko Baru
         </button>

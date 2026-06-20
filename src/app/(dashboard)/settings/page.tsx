@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useToast } from "@/components/Toast";
+import Swal from "sweetalert2";
 
 const settingsTabs = ["Umum", "Keamanan", "Manajemen Tim", "Notifikasi", "Integrasi"];
 
@@ -184,7 +185,33 @@ export default function SettingsPage() {
           {/* Save Button */}
           <div className="flex justify-end pt-4 pb-8">
             <button
-              onClick={() => showToast("Perubahan berhasil disimpan!", "success")}
+              onClick={() => {
+                Swal.fire({
+                  title: "Simpan Perubahan?",
+                  text: "Apakah Anda yakin ingin menyimpan perubahan pengaturan ini?",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonColor: "#003ada",
+                  cancelButtonColor: "#747687",
+                  confirmButtonText: "Ya, simpan",
+                  cancelButtonText: "Batal",
+                  customClass: {
+                    popup: "rounded-[24px] font-[var(--font-inter)]",
+                  }
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    Swal.fire({
+                      title: "Berhasil!",
+                      text: "Perubahan berhasil disimpan.",
+                      icon: "success",
+                      confirmButtonColor: "#003ada",
+                      customClass: {
+                        popup: "rounded-[24px] font-[var(--font-inter)]",
+                      }
+                    });
+                  }
+                });
+              }}
               className="bg-[#003ada] text-white font-bold px-10 py-4 rounded-full shadow-lg shadow-[#0029a1]/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
             >
               Simpan Perubahan

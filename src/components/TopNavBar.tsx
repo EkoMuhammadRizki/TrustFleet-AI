@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { notifications } from "@/lib/data";
+import Swal from "sweetalert2";
 
 export default function TopNavBar() {
   const [showNotif, setShowNotif] = useState(false);
@@ -18,12 +19,35 @@ export default function TopNavBar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowUserMenu(false);
+    Swal.fire({
+      title: "Apakah Anda yakin ingin keluar?",
+      text: "Anda akan diarahkan kembali ke halaman utama.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#003ada",
+      cancelButtonColor: "#747687",
+      confirmButtonText: "Ya, keluar",
+      cancelButtonText: "Batal",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "/";
+      }
+    });
+  };
+
   return (
     <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 flex justify-between items-center px-8 bg-white border-b border-[#c4c5d8]/30 shadow-sm z-40">
       {/* Search Bar */}
       <div className="flex items-center bg-[#eff4ff] px-4 py-2 rounded-full w-96 gap-3">
         <span className="material-symbols-outlined text-[#747687]">search</span>
         <input
+          suppressHydrationWarning={true}
           className="bg-transparent border-none focus:ring-0 focus:outline-none font-[var(--font-inter)] text-[14px] w-full placeholder:text-[#747687]/60"
           placeholder="Cari data armada atau profil kredit..."
           type="text"
@@ -34,6 +58,7 @@ export default function TopNavBar() {
         {/* Notification Bell */}
         <div className="relative" ref={notifRef}>
           <button
+            suppressHydrationWarning={true}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#eff4ff] transition-all relative"
             onClick={() => { setShowNotif(!showNotif); setShowUserMenu(false); }}
           >
@@ -74,6 +99,7 @@ export default function TopNavBar() {
         {/* User Menu */}
         <div className="relative" ref={userRef}>
           <button
+            suppressHydrationWarning={true}
             className="flex items-center gap-3 px-3 py-1 rounded-full hover:bg-[#eff4ff] transition-all cursor-pointer"
             onClick={() => { setShowUserMenu(!showUserMenu); setShowNotif(false); }}
           >
@@ -108,7 +134,7 @@ export default function TopNavBar() {
                 <Link
                   href="/"
                   className="flex items-center gap-3 px-4 py-3 hover:bg-[#ffdad6]/30 transition-colors text-sm font-medium text-[#DF2721]"
-                  onClick={() => setShowUserMenu(false)}
+                  onClick={handleLogout}
                 >
                   <span className="material-symbols-outlined text-[20px]">logout</span>
                   Keluar

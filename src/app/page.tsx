@@ -1,10 +1,65 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LandingPage() {
+  const [progress, setProgress] = useState(0);
+  const [showSplash, setShowSplash] = useState(true);
+  const [fadeSplash, setFadeSplash] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Lock body scro6ll while splash screen is active
   useEffect(() => {
+    if (showSplash) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showSplash]);
+
+  // Simulate loading progress
+  useEffect(() => {
+    if (!showSplash) return;
+
+    let currentProgress = 0;
+    const interval = setInterval(() => {
+      let step = 0;
+      if (currentProgress < 30) {
+        step = Math.floor(Math.random() * 8) + 5;
+      } else if (currentProgress < 70) {
+        step = Math.floor(Math.random() * 5) + 3;
+      } else if (currentProgress < 90) {
+        step = Math.floor(Math.random() * 3) + 1;
+      } else {
+        step = Math.floor(Math.random() * 2) + 1;
+      }
+
+      currentProgress = Math.min(currentProgress + step, 100);
+      setProgress(currentProgress);
+
+      if (currentProgress === 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          setFadeSplash(true);
+          setTimeout(() => {
+            setShowSplash(false);
+            setIsLoaded(true);
+          }, 600);
+        }, 400);
+      }
+    }, 80);
+
+    return () => clearInterval(interval);
+  }, [showSplash]);
+
+  // Page Scroll and Animation Observer triggers only after splash screen finishes
+  useEffect(() => {
+    if (!isLoaded) return;
+
     const handleScroll = () => {
       const header = document.getElementById('main-header');
       if (header) {
@@ -27,18 +82,69 @@ export default function LandingPage() {
     }, observerOptions);
 
     const cards = document.querySelectorAll('.animate-card');
-    cards.forEach((card, index) => {
-      // Add a slight delay based on index if multiple cards are in view at the same time
-      // This is handled by CSS classes for some elements, but we can do it dynamically
+    cards.forEach((card) => {
       observer.observe(card);
     });
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isLoaded]);
 
   return (
-    <div className="bg-[#FAFAFC] text-[#061649] font-[var(--font-inter)] overflow-x-hidden">
+    <>
+      {showSplash && (
+        <div
+          className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-b from-[#061649] to-[#030d2b] transition-all duration-700 ease-in-out ${
+            fadeSplash ? 'opacity-0 -translate-y-full' : 'opacity-100 translate-y-0'
+          }`}
+        >
+          {/* Subtle background glow effect */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#003ADA]/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+
+          {/* Splash Content Container */}
+          <div className="flex flex-col items-center text-center px-4 animate-[fade-in_0.8s_ease-out_forwards]">
+            {/* Logo in a premium glowing glass container */}
+            <div className="w-24 h-24 relative bg-white rounded-3xl p-4 shadow-[0_8px_32px_rgba(255,255,255,0.08)] border border-white/10 flex items-center justify-center mb-6 hover:scale-105 transition-transform duration-300">
+              <Image
+                src="/logo/TrustFleetAILogoNavy.png"
+                alt="TrustFleet AI Logo"
+                fill
+                className="object-contain p-3"
+                priority
+              />
+            </div>
+
+            {/* Title */}
+            <h1 className="font-[var(--font-jakarta)] text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-2">
+              TrustFleet <span className="text-[#003ADA]">AI</span>
+            </h1>
+            <p className="font-[var(--font-inter)] text-sm text-[#C5E1EF] tracking-[0.2em] uppercase font-semibold mb-10">
+              Intelegensi Fintech
+            </p>
+
+            {/* Loading Bar Wrapper */}
+            <div className="w-64">
+              {/* Progress track */}
+              <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden relative">
+                <div
+                  className="h-full bg-gradient-to-r from-[#003ADA] to-[#1FA463] rounded-full transition-all duration-100 ease-out shadow-[0_0_12px_rgba(0,58,218,0.5)]"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              
+              {/* Progress percentage and status text */}
+              <div className="flex justify-between items-center mt-3 text-white/55 text-[11px] font-medium font-[var(--font-inter)] tracking-wider">
+                <span className="animate-pulse">
+                  {progress < 100 ? 'Mempersiapkan sistem...' : 'Selesai!'}
+                </span>
+                <span className="font-mono font-bold text-white/70">{progress}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="bg-[#FAFAFC] text-[#061649] font-[var(--font-inter)] overflow-x-hidden">
       {/* Sticky Header */}
       <header
         id="main-header"
@@ -104,7 +210,9 @@ export default function LandingPage() {
                 <div className="flex -space-x-3">
                   <img alt="Manajer logistik" className="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD41a89-5v1h2OxA83UOTIfULos7rU8CmrJV8E6numyMwheGhQZk5DJhwNl1K3C-IQR1BZii9gAi6ZAref92Efnjn1yDLyzhcxMMgJoGCcr9ZGebsydzY78fMZqvkdQTaLsTkJsAcHjRPyo3z5JHQaXAgmM6IQDTNq7KjYPb9pmxRDdmd1Q78VG1tZXDtBTiauMw-xC6l6h1BEtCCtQbP7E21NuJuXhS4jC--tkZng2_jzGePID-pJbzhZH3vdFAQNWeWl0rf27C68" />
                   <img alt="Eksekutif fintech" className="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD97ERc_y3bwHXf1Gi8AIxh1od-3WNGGoL7j8TcRvC6K-o8Zp1DvmKC1A04BZrjwFJpPau0kXenVQ0MgEhudIBRoAbfnXhK85Ng8pNO1wXSSey12yJXVLloNb_XNoyFsMoWgF77Dr_RsDCHmduNtAe2GQN9M5Z62SLnvmijxZFVBspS6Wv-E3fSai5pvvFG9E8ScqqbD5Hz97D97wJertTF4wJYDuHloVQM5Elg3LjL_S7GuaJ4SVh0eA3qB470TQjHL5dgeef0An4" />
-                  <img alt="Tim analis" className="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAajfYVJEQZKSZr8Vrz_BCFNjWXp0Gc3SHieiy-EarRQMICElQpzvFfP3f0b21ixj9DOEMC-tQjBeAoXeQHtTXgYa1a21jueGanaCr2yrXDCHch_1NQTHMPaZrq3VByZ4SjStvkKGO2obj8g8ARSpjSnp8fcFPKk6errnapWorO_P5wuGY9MVOoZGBTmfN-cpLYizKAnVwor2ZfmmZ4fWvPHVC45fqFrRJRYmgPLBX57P0Bs3SFo6I56iB0rCwob-1JgFVEim3EYU" />
+                  <div className="w-10 h-10 rounded-full border-2 border-white bg-[#003ada] flex items-center justify-center text-white font-bold text-[11px] shrink-0">
+                    EM
+                  </div>
                 </div>
                 <p className="text-[12px] font-semibold text-[#5B6B82]">Dipercaya oleh <span className="font-bold text-[#061649]">500+</span> Mitra Armada</p>
               </div>
@@ -509,5 +617,6 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+    </>
   );
 }
