@@ -10,6 +10,7 @@ const navItems = [
   { href: "/credit-scoring", icon: "credit_score", label: "Skor Kredit" },
   { href: "/risk-analytics", icon: "analytics", label: "Analisis Risiko" },
   { href: "/reports", icon: "assessment", label: "Laporan" },
+  { href: "/guide", icon: "menu_book", label: "Panduan" },
   { href: "/settings", icon: "settings", label: "Pengaturan" },
 ];
 

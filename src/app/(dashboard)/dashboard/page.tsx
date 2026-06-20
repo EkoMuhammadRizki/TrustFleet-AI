@@ -11,6 +11,46 @@ export default function DashboardPage() {
 
   useEffect(() => {
     setCustomerList(getStoredCustomers());
+
+    if (typeof window !== "undefined") {
+      const welcomeShown = sessionStorage.getItem("tf_welcome_shown");
+      if (!welcomeShown) {
+        sessionStorage.setItem("tf_welcome_shown", "true");
+        Swal.fire({
+          title: "Selamat Datang di TrustFleet AI!",
+          html: `
+            <div class="space-y-4 font-[var(--font-inter)] text-left text-[#444655] leading-relaxed text-[14px] mt-2">
+              <p>
+                Platform Penilaian Risiko Kredit Alternatif berbasis AI untuk membuka pertumbuhan, memitigasi risiko, dan menyederhanakan pembiayaan logistik dengan wawasan telematika yang dapat dijelaskan.
+              </p>
+              <div class="bg-[#eff4ff]/60 p-4 rounded-[20px] border border-[#003ada]/10 space-y-3">
+                <h5 class="font-bold text-[#0b1c30] text-[12px] uppercase tracking-wider flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[18px] text-[#003ada]">explore</span>
+                  Panduan Cepat Alur Sistem:
+                </h5>
+                <ol class="list-decimal list-inside space-y-2 text-[12px] text-[#444655]">
+                  <li><strong>Dashboard:</strong> Pantau skor portofolio & buat penilaian risiko baru.</li>
+                  <li><strong>Pelanggan 360:</strong> Cek telematika, rute, servis, & log armada.</li>
+                  <li><strong>Skor Kredit:</strong> Tinjau penjelasan skor AI & tetapkan keputusan kredit.</li>
+                  <li><strong>Analisis Risiko & Laporan:</strong> Saring portofolio & unduh laporan PDF.</li>
+                </ol>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-amber-50 rounded-[16px] border border-amber-200/50 text-amber-800 text-[12px]">
+                <span class="material-symbols-outlined text-[20px] text-amber-600 shrink-0 font-normal">menu_book</span>
+                <p>
+                  Butuh informasi lebih detail? Silakan klik tab <strong class="text-[#003ada]">Panduan</strong> pada bilah menu samping (sidebar) kapan saja.
+                </p>
+              </div>
+            </div>
+          `,
+          confirmButtonColor: "#003ada",
+          confirmButtonText: "Mulai Platform",
+          customClass: {
+            popup: "rounded-[24px] font-[var(--font-inter)] p-6 md:p-8 max-w-[500px]",
+          }
+        });
+      }
+    }
   }, []);
 
   const handleNewAssessment = () => {
