@@ -8,6 +8,7 @@ export default function LandingPage() {
   const [showSplash, setShowSplash] = useState(true);
   const [fadeSplash, setFadeSplash] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Lock body scro6ll while splash screen is active
   useEffect(() => {
@@ -152,7 +153,16 @@ export default function LandingPage() {
       >
         <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 relative">
+            {/* Hamburger Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-full hover:bg-[#eff4ff] text-[#061649] transition-colors cursor-pointer flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-[24px]">
+                {isMobileMenuOpen ? 'close' : 'menu'}
+              </span>
+            </button>
+            <div className="w-10 h-10 md:w-12 md:h-12 relative">
               <Image
                 src="/logo/TrustFleetAILogoNavy.png"
                 alt="TrustFleet AI Logo"
@@ -161,22 +171,74 @@ export default function LandingPage() {
               />
             </div>
             <div>
-              <p className="font-[var(--font-inter)] font-bold text-xl text-[#061649]">TrustFleet AI</p>
-              <p className="text-[11px] text-[#5B6B82]">Intelegensi Fintech</p>
+              <p className="font-[var(--font-inter)] font-bold text-base md:text-xl text-[#061649]">TrustFleet AI</p>
+              <p className="text-[10px] md:text-[11px] text-[#5B6B82]">Intelegensi Fintech</p>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <a className="font-[var(--font-inter)] text-[14px] text-[#5B6B82] hover:text-[#003ADA] transition-colors duration-300" href="#features">Fitur</a>
+            <a className="font-[var(--font-inter)] text-[14px] text-[#5B6B82] hover:text-[#003ADA] transition-colors duration-300" href="#tujuan">Tujuan</a>
+            <a className="font-[var(--font-inter)] text-[14px] text-[#5B6B82] hover:text-[#003ADA] transition-colors duration-300" href="#cara-kerja">Cara Kerja</a>
             <a className="font-[var(--font-inter)] text-[14px] text-[#5B6B82] hover:text-[#003ADA] transition-colors duration-300" href="#solutions">Solusi</a>
             <a className="font-[var(--font-inter)] text-[14px] text-[#5B6B82] hover:text-[#003ADA] transition-colors duration-300" href="#about-section">Tentang</a>
           </nav>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="hidden sm:block font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] text-[#061649] hover:text-[#003ADA] transition-all duration-300">Masuk</Link>
-            <Link href="/dashboard" className="bg-[#003ADA] text-white px-6 py-3 rounded-full font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-[#003ADA]/20 hover:shadow-[#003ADA]/30">
+            <Link href="/dashboard" className="bg-[#003ADA] text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-[var(--font-inter)] text-[11px] md:text-[12px] font-semibold tracking-[0.05em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-[#003ADA]/20 hover:shadow-[#003ADA]/30">
               Mulai Sekarang
             </Link>
           </div>
         </div>
+
+        {/* Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white/95 backdrop-blur-md border-b border-[#E5EAF3] shadow-lg animate-fade-in absolute top-20 left-0 right-0 py-6 px-6 z-40">
+            <nav className="flex flex-col gap-4">
+              <a
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+                href="#features"
+              >
+                Fitur
+              </a>
+              <a
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+                href="#tujuan"
+              >
+                Tujuan
+              </a>
+              <a
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+                href="#cara-kerja"
+              >
+                Cara Kerja
+              </a>
+              <a
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+                href="#solutions"
+              >
+                Solusi
+              </a>
+              <a
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+                href="#about-section"
+              >
+                Tentang
+              </a>
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                href="/dashboard"
+                className="font-[var(--font-inter)] text-[16px] font-semibold text-[#061649] hover:text-[#003ADA] transition-colors duration-300 py-2 border-b border-[#E5EAF3]/50"
+              >
+                Masuk
+              </Link>
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="pt-20">
@@ -186,7 +248,7 @@ export default function LandingPage() {
           <div className="absolute -top-24 -right-24 w-[600px] h-[600px] bg-[#C5E1EF]/40 organic-blob -z-10 blur-3xl animate-pulse"></div>
           <div className="absolute top-1/2 -left-24 w-[400px] h-[400px] bg-[#C5E1EF]/20 organic-blob -z-10 blur-2xl"></div>
           <div className="max-w-[1440px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8 text-center lg:text-left animate-card opacity-0 translate-y-10 transition-all duration-700">
+            <div className="space-y-8 text-center lg:text-left animate-card opacity-0 translate-y-10 transition-all duration-700 order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#EEF3FF] rounded-full text-[#003ADA] border border-[#C5E1EF]/30">
                 <span className="material-symbols-outlined text-[18px]">verified</span>
                 <span className="text-[12px] font-semibold tracking-[0.05em] uppercase">Intelijen Kredit Generasi Baru</span>
@@ -217,47 +279,241 @@ export default function LandingPage() {
                 <p className="text-[12px] font-semibold text-[#5B6B82]">Dipercaya oleh <span className="font-bold text-[#061649]">500+</span> Mitra Armada</p>
               </div>
             </div>
-            <div className="relative animate-card opacity-0 translate-y-10 transition-all duration-700 delay-200">
-              {/* Dashboard Preview Mockup */}
-              <div className="relative bg-white rounded-[24px] shadow-2xl overflow-hidden border border-[#E5EAF3] transform lg:rotate-2 hover:rotate-0 transition-transform duration-700">
-                <div className="h-8 bg-[#FAFAFC] flex items-center px-4 gap-2 border-b border-[#E5EAF3]">
-                  <div className="w-2 h-2 rounded-full bg-[#DF2721]/40"></div>
-                  <div className="w-2 h-2 rounded-full bg-[#F2A93C]/40"></div>
-                  <div className="w-2 h-2 rounded-full bg-[#1FA463]/40"></div>
+            <div className="relative animate-card opacity-0 translate-y-10 transition-all duration-700 delay-200 min-h-[500px] w-full flex items-center justify-center order-1 lg:order-2">
+              {/* Background Glows */}
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#003ADA]/10 rounded-full blur-3xl -z-10"></div>
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#C5E1EF]/30 rounded-full blur-2xl -z-10"></div>
+
+              {/* Card 1: Data Input (Telematics) - Top-Left Layer */}
+              <div className="absolute top-0 left-2 sm:left-0 w-[240px] sm:w-[280px] bg-white p-5 rounded-[20px] shadow-lg border border-[#E5EAF3] transform -rotate-6 hover:-rotate-2 transition-all duration-500 hover:scale-105 hover:z-20 group">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-[#eff4ff] flex items-center justify-center text-[#003ADA]">
+                    <span className="material-symbols-outlined text-[20px]">local_shipping</span>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-[#747687] uppercase tracking-wider">Telematika Armada</p>
+                    <h4 className="text-[13px] font-bold text-[#061649] truncate">Actros #992</h4>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <div className="flex justify-between items-end mb-8">
-                    <div>
-                      <p className="text-[12px] font-semibold text-[#5B6B82] mb-1">Kesehatan Kredit Armada</p>
-                      <h3 className="font-[var(--font-jakarta)] text-[24px] font-bold text-[#061649]">Institusional A+</h3>
+                
+                {/* Driver Avatar & Stats */}
+                <div className="flex items-center gap-3 bg-[#FAFAFC] p-2.5 rounded-xl border border-[#E5EAF3]/60 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-[#1FA463]/10 border border-[#1FA463]/20 flex items-center justify-center text-[16px] shrink-0 select-none">
+                    👷
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-[11px] font-bold text-[#061649] truncate">Budi Santoso</p>
+                    <p className="text-[9px] text-[#5B6B82]">Pengemudi Utama</p>
+                  </div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-[#1FA463] animate-pulse"></div>
+                </div>
+
+                <div className="space-y-1.5 text-[10px] text-[#5B6B82]">
+                  <div className="flex justify-between">
+                    <span>Jarak Tempuh:</span>
+                    <span className="font-bold text-[#061649]">8.450 Km</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Kesehatan Mesin:</span>
+                    <span className="font-bold text-[#1FA463]">98% (Optimal)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: AI TrustScore Engine (Process) - Top-Right Layer */}
+              <div className="absolute top-12 right-2 sm:right-0 w-[240px] sm:w-[280px] glass-card p-5 rounded-[20px] shadow-xl transform rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-20 group">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-[16px] select-none">🧠</span>
+                  <h4 className="font-[var(--font-jakarta)] text-[13px] font-extrabold text-[#0029a1]">AI TrustScore Engine</h4>
+                </div>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                      <span>Rutin Servis (+45 Pts)</span>
+                      <span className="text-[#1FA463]">85%</span>
                     </div>
-                    <div className="text-right">
-                      <p className="font-[var(--font-jakarta)] text-[28px] font-extrabold text-[#1FA463]">842</p>
-                      <p className="text-[12px] font-semibold text-[#5B6B82]">Skor Armada</p>
+                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-[#1FA463] h-full w-[85%]" />
                     </div>
                   </div>
-                  <div className="h-48 w-full bg-white rounded-xl mb-6 relative flex items-end gap-2 p-4">
-                    <div className="w-full bg-[#003ADA]/10 h-1/2 rounded-t-lg"></div>
-                    <div className="w-full bg-[#003ADA]/20 h-3/4 rounded-t-lg"></div>
-                    <div className="w-full bg-[#003ADA]/40 h-2/3 rounded-t-lg"></div>
-                    <div className="w-full bg-[#003ADA]/60 h-5/6 rounded-t-lg"></div>
-                    <div className="w-full bg-[#003ADA] h-full rounded-t-lg"></div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E5EAF3]">
-                      <p className="text-[12px] font-semibold text-[#5B6B82]">Indeks Risiko</p>
-                      <p className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#061649]">0.04%</p>
+
+                  <div>
+                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                      <span>Utilisasi Armada (+28 Pts)</span>
+                      <span className="text-[#1FA463]">92%</span>
                     </div>
-                    <div className="p-3 bg-[#FAFAFC] rounded-xl border border-[#E5EAF3]">
-                      <p className="text-[12px] font-semibold text-[#5B6B82]">Potensi Pertumbuhan</p>
-                      <p className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#003ADA]">+12.4%</p>
+                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-[#1FA463] h-full w-[92%]" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                      <span>Tepat Waktu Bayar (+50 Pts)</span>
+                      <span className="text-[#1FA463]">98%</span>
+                    </div>
+                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-[#1FA463] h-full w-[98%]" />
                     </div>
                   </div>
                 </div>
               </div>
-              {/* Decorative Elements */}
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#003ADA]/10 rounded-full blur-xl -z-10"></div>
-              <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#C5E1EF]/20 rounded-full blur-lg -z-10"></div>
+
+              {/* Card 3: Approved Financing & Credit (Output) - Bottom Layer */}
+              <div className="absolute bottom-2 left-4 sm:left-12 w-[260px] sm:w-[320px] bg-gradient-to-br from-[#061649] to-[#003ADA] text-white p-5 rounded-[24px] shadow-2xl transform rotate-1 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-30 group border border-white/10">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <p className="text-[9px] font-semibold text-[#C5E1EF] uppercase tracking-wider">Skor & Limit Kredit</p>
+                    <h3 className="font-[var(--font-jakarta)] text-[16px] font-extrabold mt-0.5 text-white">Institusional A+</h3>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-[var(--font-jakarta)] text-[22px] font-extrabold text-[#1FA463] flex items-center justify-end gap-1">
+                      <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                      842
+                    </div>
+                    <p className="text-[9px] text-[#C5E1EF] font-semibold">Skor Armada</p>
+                  </div>
+                </div>
+
+                {/* Credit Limit Mockup */}
+                <div className="bg-white/10 p-3 rounded-xl border border-white/10 mb-4">
+                  <p className="text-[9px] text-[#C5E1EF]">Limit Kredit Disetujui</p>
+                  <p className="font-[var(--font-jakarta)] text-[18px] sm:text-[20px] font-extrabold tracking-tight mt-0.5 text-white">Rp 36 Miliar</p>
+                </div>
+
+                {/* Risk Officer Avatar */}
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[14px] select-none">
+                    🤵
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-white">Marcus Sterling</p>
+                    <p className="text-[8px] text-[#C5E1EF]">Petugas Risiko</p>
+                  </div>
+                  <span className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 bg-[#1FA463]/20 border border-[#1FA463]/30 rounded-full text-[8px] font-bold text-[#1FA463] uppercase tracking-wider">
+                    Disetujui
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Tujuan Section */}
+        <section className="py-24 bg-gradient-to-tr from-white to-[#EEF3FF]/50 relative overflow-hidden border-t border-[#E5EAF3]" id="tujuan">
+          <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#003ADA]/5 rounded-full blur-3xl"></div>
+          <div className="max-w-[1440px] mx-auto px-4 md:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              
+              {/* Left Column: Visual Mockup */}
+              <div className="relative animate-card opacity-0 translate-y-10 transition-all duration-700 w-full flex items-center justify-center min-h-[350px]">
+                {/* Main Card */}
+                <div className="w-full max-w-[480px] bg-white p-8 rounded-[32px] border border-[#E5EAF3] shadow-xl relative overflow-hidden">
+                  <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#003ADA]/5 rounded-full blur-xl"></div>
+                  
+                  <div className="flex justify-between items-center mb-8">
+                    <div>
+                      <p className="text-[10px] font-bold text-[#747687] uppercase tracking-wider">Metrik Dampak Utama</p>
+                      <h4 className="text-xl font-bold text-[#061649]">Target Capaian Sistem</h4>
+                    </div>
+                    <span className="material-symbols-outlined text-[#003ADA] bg-[#EEF3FF] p-3 rounded-full">target</span>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Item 1 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-[#061649]">
+                        <span>Akses Pendanaan Lebih Cepat</span>
+                        <span className="text-[#003ADA]">10x Lebih Cepat</span>
+                      </div>
+                      <div className="w-full bg-[#E5EAF3] h-2 rounded-full overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#003ADA] to-[#1FA463] h-full w-[95%]" />
+                      </div>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-[#061649]">
+                        <span>Pengurangan Rasio Gagal Bayar</span>
+                        <span className="text-[#1FA463]">-35% Risiko</span>
+                      </div>
+                      <div className="w-full bg-[#E5EAF3] h-2 rounded-full overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#003ADA] to-[#1FA463] h-full w-[85%]" />
+                      </div>
+                    </div>
+
+                    {/* Item 3 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-[#061649]">
+                        <span>Transparansi Keputusan (AI Explainable)</span>
+                        <span className="text-[#003ADA]">100% Terang</span>
+                      </div>
+                      <div className="w-full bg-[#E5EAF3] h-2 rounded-full overflow-hidden">
+                        <div className="bg-gradient-to-r from-[#003ADA] to-[#1FA463] h-full w-[100%]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Micro stats banner */}
+                  <div className="mt-8 pt-6 border-t border-slate-100 grid grid-cols-2 gap-4 text-center">
+                    <div>
+                      <p className="text-[20px] font-extrabold text-[#061649]">&lt; 24 Jam</p>
+                      <p className="text-[10px] text-[#5B6B82] font-medium uppercase mt-0.5">Waktu Tinjauan</p>
+                    </div>
+                    <div>
+                      <p className="text-[20px] font-extrabold text-[#1FA463]">Rp 370+ Miliar</p>
+                      <p className="text-[10px] text-[#5B6B82] font-medium uppercase mt-0.5">Pendanaan Tersalurkan</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Text Content */}
+              <div className="space-y-8 animate-card opacity-0 translate-y-10 transition-all duration-700 delay-100">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#EEF3FF] rounded-full text-[#003ADA] border border-[#C5E1EF]/30">
+                  <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
+                  <span className="text-[12px] font-semibold tracking-[0.05em] uppercase">TUJUAN STRATEGIS KAMI</span>
+                </div>
+                
+                <h2 className="font-[var(--font-jakarta)] text-[32px] md:text-[40px] font-extrabold leading-tight tracking-[-0.02em] text-[#061649]">
+                  Mewujudkan Keputusan Kredit Alternatif yang Adil & Transparan
+                </h2>
+                
+                <p className="font-[var(--font-inter)] text-[16px] leading-[1.7] text-[#5B6B82]">
+                  TrustFleet AI hadir dengan tujuan besar untuk mendemokrasikan pembiayaan industri logistik di Indonesia. Kami tidak hanya membuat penilaian risiko menjadi otomatis, tetapi juga berkeadilan melalui pengolahan data alternatif operasional yang nyata.
+                </p>
+
+                <div className="space-y-5 pt-4">
+                  {/* Point 1 */}
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-[#1FA463] bg-[#1FA463]/10 p-2.5 rounded-full shrink-0">speed</span>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#061649] mb-1">Mempersingkat Proses Penilaian</h4>
+                      <p className="text-xs text-[#5B6B82] leading-[1.6]">Mengganti proses audit manual yang memakan waktu berminggu-minggu menjadi kalkulasi alternatif instan kurang dari 24 jam.</p>
+                    </div>
+                  </div>
+
+                  {/* Point 2 */}
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-[#003ADA] bg-[#003ADA]/10 p-2.5 rounded-full shrink-0">psychology</span>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#061649] mb-1">Mencegah Bias & Ketidakpastian</h4>
+                      <p className="text-xs text-[#5B6B82] leading-[1.6]">Menggunakan kecerdasan AI transparan (Explainable AI) untuk menjelaskan secara rinci faktor di balik setiap angka skor kredit.</p>
+                    </div>
+                  </div>
+
+                  {/* Point 3 */}
+                  <div className="flex items-start gap-4">
+                    <span className="material-symbols-outlined text-[#1FA463] bg-[#1FA463]/10 p-2.5 rounded-full shrink-0">trending_up</span>
+                    <div>
+                      <h4 className="font-bold text-sm text-[#061649] mb-1">Mendorong Pertumbuhan Usaha Armada</h4>
+                      <p className="text-xs text-[#5B6B82] leading-[1.6]">Membantu pemilik armada UD Trucks dengan rekam jejak operasional yang baik untuk mendapatkan modal pembiayaan tanpa hambatan.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -276,7 +532,7 @@ export default function LandingPage() {
             </div>
 
             {/* Trusted brand logos row */}
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 mb-16 bg-[#E5EAF3]/30 py-6 px-8 rounded-full animate-card opacity-0 translate-y-10 transition-all duration-700">
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 mb-16 bg-[#E5EAF3]/30 py-6 px-8 rounded-2xl md:rounded-full animate-card opacity-0 translate-y-10 transition-all duration-700">
               <div className="flex items-center gap-2 text-[#5B6B82]">
                 <span className="material-symbols-outlined text-3xl">local_shipping</span>
                 <span className="font-bold text-xl font-[var(--font-jakarta)]">LogiTrack</span>
@@ -348,6 +604,95 @@ export default function LandingPage() {
                   Dasbor komprehensif yang memvisualisasikan profil risiko seluruh armada, memungkinkan intervensi proaktif sebelum masalah muncul.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Cara Kerja Section */}
+        <section className="py-24 bg-white border-t border-b border-[#E5EAF3] relative overflow-hidden" id="cara-kerja">
+          <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-[#1FA463]/5 rounded-full blur-3xl"></div>
+          
+          <div className="max-w-[1440px] mx-auto px-4 md:px-8 relative z-10">
+            {/* Header */}
+            <div className="text-center max-w-3xl mx-auto mb-16 animate-card opacity-0 translate-y-10 transition-all duration-700">
+              <div className="inline-flex items-center gap-2 px-6 py-2 border border-[#003ADA] text-[#003ADA] text-[11px] font-semibold tracking-[0.05em] uppercase rounded-full mb-4">
+                PROSES 4 LANGKAH MUDAH
+              </div>
+              <h2 className="font-[var(--font-jakarta)] text-[36px] md:text-[44px] font-extrabold leading-tight tracking-[-0.02em] text-[#061649] mb-6">
+                Bagaimana Sistem Kami Bekerja?
+              </h2>
+              <p className="font-[var(--font-inter)] text-[16px] leading-[1.6] text-[#5B6B82]">
+                Sistem TrustFleet AI mengotomatisasi pengolahan data mentah armada menjadi penilaian kredit alternatif yang siap digunakan dalam 4 langkah terstruktur.
+              </p>
+            </div>
+
+            {/* Step Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              
+              {/* Step 1 */}
+              <div className="bg-white p-8 rounded-[24px] border border-[#E5EAF3] hover:-translate-y-2 hover:shadow-xl transition-all duration-300 relative group animate-card opacity-0 translate-y-10">
+                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#003ADA] text-white rounded-full flex items-center justify-center font-bold text-sm border-4 border-[#FAFAFC] shadow-md group-hover:scale-110 transition-transform duration-300">
+                  01
+                </div>
+                <div className="w-[56px] h-[56px] bg-[#EEF3FF] rounded-xl flex items-center justify-center text-[#003ADA] mb-6 group-hover:scale-105 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">database_upload</span>
+                </div>
+                <h3 className="font-[var(--font-jakarta)] text-[18px] font-bold text-[#061649] mb-3">
+                  Integrasi Data Real-time
+                </h3>
+                <p className="font-[var(--font-inter)] text-[13px] leading-[1.6] text-[#5B6B82]">
+                  Sistem menghubungkan data telematika kendaraan, log servis resmi, dan volume pembelian suku cadang armada secara aman via API.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-white p-8 rounded-[24px] border border-[#E5EAF3] hover:-translate-y-2 hover:shadow-xl transition-all duration-300 relative group animate-card opacity-0 translate-y-10 delay-100">
+                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#003ADA] text-white rounded-full flex items-center justify-center font-bold text-sm border-4 border-[#FAFAFC] shadow-md group-hover:scale-110 transition-transform duration-300">
+                  02
+                </div>
+                <div className="w-[56px] h-[56px] bg-[#EEF3FF] rounded-xl flex items-center justify-center text-[#003ADA] mb-6 group-hover:scale-105 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">psychology</span>
+                </div>
+                <h3 className="font-[var(--font-jakarta)] text-[18px] font-bold text-[#061649] mb-3">
+                  Pemrosesan Engine AI
+                </h3>
+                <p className="font-[var(--font-inter)] text-[13px] leading-[1.6] text-[#5B6B82]">
+                  Algoritma AI menganalisis parameter operasional, konsistensi rute, dan kebiasaan pembayaran untuk menghitung indeks risiko.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-white p-8 rounded-[24px] border border-[#E5EAF3] hover:-translate-y-2 hover:shadow-xl transition-all duration-300 relative group animate-card opacity-0 translate-y-10 delay-200">
+                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#003ADA] text-white rounded-full flex items-center justify-center font-bold text-sm border-4 border-[#FAFAFC] shadow-md group-hover:scale-110 transition-transform duration-300">
+                  03
+                </div>
+                <div className="w-[56px] h-[56px] bg-[#EEF3FF] rounded-xl flex items-center justify-center text-[#003ADA] mb-6 group-hover:scale-105 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">speed</span>
+                </div>
+                <h3 className="font-[var(--font-jakarta)] text-[18px] font-bold text-[#061649] mb-3">
+                  Skor & Penjelasan AI
+                </h3>
+                <p className="font-[var(--font-inter)] text-[13px] leading-[1.6] text-[#5B6B82]">
+                  Dasbor memunculkan TrustScore (500-900) dan penjelasan terperinci mengenai pendorong naik-turunnya nilai kredit alternatif.
+                </p>
+              </div>
+
+              {/* Step 4 */}
+              <div className="bg-white p-8 rounded-[24px] border border-[#E5EAF3] hover:-translate-y-2 hover:shadow-xl transition-all duration-300 relative group animate-card opacity-0 translate-y-10 delay-300">
+                <div className="absolute -top-3 -right-3 w-10 h-10 bg-[#1FA463] text-white rounded-full flex items-center justify-center font-bold text-sm border-4 border-[#FAFAFC] shadow-md group-hover:scale-110 transition-transform duration-300">
+                  04
+                </div>
+                <div className="w-[56px] h-[56px] bg-[#1FA463]/10 rounded-xl flex items-center justify-center text-[#1FA463] mb-6 group-hover:scale-105 transition-transform">
+                  <span className="material-symbols-outlined text-2xl">check_circle</span>
+                </div>
+                <h3 className="font-[var(--font-jakarta)] text-[18px] font-bold text-[#061649] mb-3">
+                  Persetujuan Kredit Instan
+                </h3>
+                <p className="font-[var(--font-inter)] text-[13px] leading-[1.6] text-[#5B6B82]">
+                  Tim Finance/Credit Analyst meninjau dasbor dan memberikan keputusan persetujuan kredit (Approve/Review/Decline) sekali klik.
+                </p>
+              </div>
+
             </div>
           </div>
         </section>

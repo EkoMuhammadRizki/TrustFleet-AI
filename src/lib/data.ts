@@ -15,6 +15,17 @@ export interface Customer {
   joinDate: string;
 }
 
+export interface Report {
+  id: number;
+  title: string;
+  type: string;
+  size: string;
+  time: string;
+  icon: string;
+  iconBg: string;
+  iconColor: string;
+}
+
 export const customers: Customer[] = [
   {
     id: "nexus-logistics",

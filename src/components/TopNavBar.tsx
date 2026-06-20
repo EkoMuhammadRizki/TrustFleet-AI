@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notifications } from "@/lib/data";
 import Swal from "sweetalert2";
 
-export default function TopNavBar() {
+export default function TopNavBar({ onMenuClick = () => {} }: { onMenuClick?: () => void }) {
   const [showNotif, setShowNotif] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -42,24 +42,38 @@ export default function TopNavBar() {
   };
 
   return (
-    <header className="fixed top-0 right-0 w-[calc(100%-280px)] h-16 flex justify-between items-center px-8 bg-white border-b border-[#c4c5d8]/30 shadow-sm z-40">
-      {/* Search Bar */}
-      <div className="flex items-center bg-[#eff4ff] px-4 py-2 rounded-full w-96 gap-3">
-        <span className="material-symbols-outlined text-[#747687]">search</span>
-        <input
-          suppressHydrationWarning={true}
-          className="bg-transparent border-none focus:ring-0 focus:outline-none font-[var(--font-inter)] text-[14px] w-full placeholder:text-[#747687]/60"
-          placeholder="Cari data armada atau profil kredit..."
-          type="text"
-        />
+    <header className="fixed top-0 right-0 left-0 lg:left-[280px] h-16 flex justify-between items-center px-4 md:px-8 bg-white border-b border-[#c4c5d8]/30 shadow-sm z-40">
+      {/* Menu Hamburger & Search Bar */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-1">
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 rounded-full hover:bg-[#eff4ff] text-[#061649] transition-colors cursor-pointer flex items-center justify-center shrink-0"
+        >
+          <span className="material-symbols-outlined text-[24px]">menu</span>
+        </button>
+
+        <div className="flex items-center gap-3">
+          {/* Workspace Selector */}
+          <div className="flex items-center gap-1.5 bg-[#eff4ff] px-3.5 py-1.5 rounded-full text-[#0029a1] text-xs font-bold border border-[#dee1ff] select-none cursor-pointer hover:bg-[#dee1ff] transition-colors">
+            <span className="material-symbols-outlined text-[16px]">hub</span>
+            <span className="hidden sm:inline">Astra UD Trucks - Jakarta</span>
+            <span className="sm:hidden">Jakarta</span>
+          </div>
+          
+          {/* Connection/System Health Status */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#1FA463]/10 text-[#1FA463] rounded-full border border-[#1FA463]/20 text-xs font-bold select-none">
+            <span className="w-1.5 h-1.5 bg-[#1FA463] rounded-full animate-pulse"></span>
+            <span>AI Engine: Aktif</span>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 shrink-0">
         {/* Notification Bell */}
         <div className="relative" ref={notifRef}>
           <button
             suppressHydrationWarning={true}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#eff4ff] transition-all relative"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#eff4ff] transition-all relative cursor-pointer"
             onClick={() => { setShowNotif(!showNotif); setShowUserMenu(false); }}
           >
             <span className="material-symbols-outlined text-[#444655]">notifications</span>
@@ -67,7 +81,7 @@ export default function TopNavBar() {
           </button>
 
           {showNotif && (
-            <div className="absolute right-0 top-12 w-96 bg-white rounded-[20px] shadow-2xl border border-[#c4c5d8]/30 overflow-hidden animate-fade-in z-50">
+            <div className="absolute right-0 top-12 w-[calc(100vw-32px)] sm:w-96 max-w-sm sm:max-w-none bg-white rounded-[20px] shadow-2xl border border-[#c4c5d8]/30 overflow-hidden animate-fade-in z-50">
               <div className="p-4 border-b border-[#c4c5d8]/20">
                 <h4 className="font-[var(--font-jakarta)] font-bold text-[16px]">Notifikasi</h4>
               </div>

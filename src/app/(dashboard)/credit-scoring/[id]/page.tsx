@@ -1,16 +1,17 @@
 "use client";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
-import { customers, scoringFactors } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { getStoredCustomers, saveStoredCustomers, downloadMockPdf } from "@/lib/storage";
+import { Customer, scoringFactors } from "@/lib/data";
 import Modal from "@/components/Modal";
-import { useToast } from "@/components/Toast";
+import Swal from "sweetalert2";
 
 export default function CreditScoringDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { showToast } = useToast();
-  const customer = customers.find((c) => c.id === id) || customers[0];
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [customerList, setCustomerList] = useState<Customer[]>([]);
 
   const [approveModal, setApproveModal] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
@@ -19,22 +20,199 @@ export default function CreditScoringDetailPage() {
   const [declineReason, setDeclineReason] = useState("cash-flow");
   const [declineNote, setDeclineNote] = useState("");
 
+  useEffect(() => {
+    const list = getStoredCustomers();
+    setCustomerList(list);
+    const found = list.find((c) => c.id === id) || list[0] || null;
+    setCustomer(found);
+  }, [id]);
+
+  if (!customer) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003ada]"></div>
+      </div>
+    );
+  }
+
+  const handleUpdateStatus = (newStatus: "approved" | "review" | "declined", approvedLimit?: string) => {
+    const updatedList = customerList.map((c) => {
+      if (c.id === customer.id) {
+        return {
+          ...c,
+          status: newStatus,
+          approvedLimit: approvedLimit !== undefined ? approvedLimit : c.approvedLimit,
+        };
+      }
+      return c;
+    });
+    saveStoredCustomers(updatedList);
+    setCustomerList(updatedList);
+    setCustomer({
+      ...customer,
+      status: newStatus,
+      approvedLimit: approvedLimit !== undefined ? approvedLimit : customer.approvedLimit,
+    });
+  };
+
   const handleApprove = () => {
     setApproveModal(false);
-    showToast(`Kredit ${customer.name} berhasil disetujui!`, "success");
-    setTimeout(() => router.push("/dashboard"), 1500);
+    // If credit limit was Ditolak, restore a recommended limit
+    const limit = customer.approvedLimit === "Ditolak" ? "Rp 15.000.000.000" : customer.approvedLimit;
+    handleUpdateStatus("approved", limit);
+
+    Swal.fire({
+      icon: "success",
+      title: "Kredit Disetujui!",
+      text: `Permohonan kredit ${customer.name} berhasil disetujui dengan limit ${limit}.`,
+      confirmButtonColor: "#003ada",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      }
+    }).then(() => {
+      router.push("/dashboard");
+    });
   };
+
   const handleReview = () => {
     setReviewModal(false);
     setReviewNote("");
-    showToast(`Catatan review untuk ${customer.name} telah disimpan.`, "info");
-    setTimeout(() => router.push("/dashboard"), 1500);
+    handleUpdateStatus("review");
+
+    Swal.fire({
+      icon: "info",
+      title: "Pengajuan Peninjauan Berhasil",
+      text: `Status ${customer.name} diubah menjadi 'Review' dengan catatan peninjauan disimpan.`,
+      confirmButtonColor: "#003ada",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      }
+    }).then(() => {
+      router.push("/dashboard");
+    });
   };
+
   const handleDecline = () => {
     setDeclineModal(false);
     setDeclineNote("");
-    showToast(`Kredit ${customer.name} telah ditolak.`, "error");
-    setTimeout(() => router.push("/dashboard"), 1500);
+    handleUpdateStatus("declined", "Ditolak");
+
+    Swal.fire({
+      icon: "error",
+      title: "Permohonan Ditolak",
+      text: `Permohonan kredit ${customer.name} telah ditolak dengan sukses.`,
+      confirmButtonColor: "#DF2721",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      }
+    }).then(() => {
+      router.push("/dashboard");
+    });
+  };
+
+  const handleDownloadReport = () => {
+    const dateStr = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    const content = `==================================================
+ASTRA UD TRUCKS - ALTERNATIVE CREDIT SCORING REPORT
+Nama Armada      : ${customer.name}
+Tanggal Pembuatan: ${dateStr}
+Hasil Keputusan  : ${customer.status.toUpperCase()}
+==================================================
+
+Rincian Profil Armada:
+- Bidang Industri : ${customer.industry}
+- Wilayah Operasi : ${customer.region}
+- Ukuran Armada   : ${customer.fleetSize} Kendaraan
+- Rute Aktif      : ${customer.activeRoutes}
+
+Metrik Kelayakan Kredit AI:
+- TrustScore AI   : ${customer.score} Poin
+- Klasifikasi     : ${customer.riskLabel} (${customer.score >= 700 ? "AAA-A" : customer.score >= 500 ? "B" : "C-D"})
+- Batas Limit     : ${customer.approvedLimit}
+
+--------------------------------------------------
+Penjelasan Poin Penilaian (Explainable AI):
+${scoringFactors.map(f => `- ${f.name}: ${f.points}\n  (${f.desc})`).join("\n")}
+
+--------------------------------------------------
+Tanda Tangan Elektronik
+TrustFleet AI System
+==================================================`;
+
+    downloadMockPdf(`Laporan_Scoring_${customer.name.replace(/\s+/g, "_")}.pdf`, content);
+    
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Laporan skor kredit berhasil diunduh!",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  };
+
+  const handleLihatSemuaData = () => {
+    Swal.fire({
+      title: "Detail Data Telematika Alternatif",
+      html: `
+        <div class="space-y-4 font-[var(--font-inter)] text-left text-sm max-h-[400px] overflow-y-auto pr-1">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Semua indikator penilaian operasional real-time:</p>
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-xs font-bold text-slate-500 border-b border-slate-200">
+                  <th class="p-3">Indikator Metrik</th>
+                  <th class="p-3 text-right">Nilai Aktual</th>
+                  <th class="p-3 text-right">Skor Bobot</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-xs">
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Rasio Servis Tepat Waktu</td>
+                  <td class="p-3 text-right text-slate-600">94.2%</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+45 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Utilisasi Kendaraan Harian</td>
+                  <td class="p-3 text-right text-slate-600">8.4 Jam/Hari</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+28 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Konsumsi Bahan Bakar (Efisien)</td>
+                  <td class="p-3 text-right text-slate-600">2.8 km/Liter</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+15 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Driver Safety Index</td>
+                  <td class="p-3 text-right text-slate-600">88 / 100</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+18 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Rasio Keterlambatan Bayar</td>
+                  <td class="p-3 text-right text-slate-600">2 Kali (&lt;3 hari)</td>
+                  <td class="p-3 text-right text-[#DF2721] font-bold">-12 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Usia Armada Rata-rata</td>
+                  <td class="p-3 text-right text-slate-600">3.2 Tahun</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+10 Pts</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-700">Loyalitas Kemitraan</td>
+                  <td class="p-3 text-right text-slate-600">5+ Tahun</td>
+                  <td class="p-3 text-right text-[#1FA463] font-bold">+50 Pts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `,
+      confirmButtonColor: "#003ada",
+      confirmButtonText: "Tutup",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)] w-[500px]",
+      }
+    });
   };
 
   const score = customer.score || 785;
@@ -42,7 +220,7 @@ export default function CreditScoringDetailPage() {
   return (
     <>
       {/* Header */}
-      <div className="mb-8 flex justify-between items-end animate-fade-in">
+      <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 animate-fade-in">
         <div>
           <nav className="flex items-center gap-2 text-[#444655] mb-2">
             <Link href="/customers" className="text-[12px] font-semibold tracking-[0.05em] hover:text-[#003ada]">Skor Kredit</Link>
@@ -51,13 +229,13 @@ export default function CreditScoringDetailPage() {
           </nav>
           <h2 className="font-[var(--font-jakarta)] text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-[#0b1c30]">Detail Skor Kredit</h2>
         </div>
-        <div className="flex gap-3">
-          <button className="px-6 py-2.5 rounded-full border border-[#0029a1] text-[#0029a1] font-semibold hover:bg-[#0029a1]/5 transition-all text-[14px]">
+        <div className="flex gap-3 w-full md:w-auto">
+          <button onClick={handleDownloadReport} className="flex-1 md:flex-initial text-center justify-center px-6 py-2.5 rounded-full border border-[#0029a1] text-[#0029a1] font-semibold hover:bg-[#0029a1]/5 transition-all text-[14px] whitespace-nowrap cursor-pointer">
             Unduh Laporan
           </button>
           <button
             onClick={() => setReviewModal(true)}
-            className="px-6 py-2.5 rounded-full bg-[#003ada] text-white font-semibold shadow-lg shadow-[#003ada]/20 hover:scale-105 transition-all text-[14px]"
+            className="flex-1 md:flex-initial text-center justify-center px-6 py-2.5 rounded-full bg-[#003ada] text-white font-semibold shadow-lg shadow-[#003ada]/20 hover:scale-105 transition-all text-[14px] whitespace-nowrap cursor-pointer"
           >
             Ajukan Peninjauan
           </button>
@@ -118,7 +296,7 @@ export default function CreditScoringDetailPage() {
               </div>
               <p className="text-[#b5c0ff] text-[14px] mb-2">Limit Kredit yang Disarankan:</p>
               <h4 className="font-[var(--font-jakarta)] text-[24px] font-bold mb-6">
-                {customer.approvedLimit === "Ditolak" ? "Rp 0" : customer.approvedLimit}
+                {customer.approvedLimit === "Ditolak" ? "Rp 0 (Ditolak)" : customer.approvedLimit}
               </h4>
               <div className="bg-white/10 p-4 rounded-xl border border-white/10">
                 <p className="text-[14px] text-[#b5c0ff] leading-relaxed">
@@ -130,14 +308,14 @@ export default function CreditScoringDetailPage() {
           </div>
 
           {/* Decision Buttons */}
-          <div className="flex gap-3">
-            <button onClick={() => setApproveModal(true)} className="flex-1 py-3 bg-[#1FA463] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">
+          <div className="flex gap-2 sm:gap-3">
+            <button onClick={() => setApproveModal(true)} className="flex-1 py-3 px-2 text-center bg-[#1FA463] text-white rounded-full font-bold text-xs sm:text-sm hover:opacity-90 transition-all active:scale-95 whitespace-nowrap cursor-pointer">
               Approve
             </button>
-            <button onClick={() => setReviewModal(true)} className="flex-1 py-3 bg-[#F2A93C] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">
+            <button onClick={() => setReviewModal(true)} className="flex-1 py-3 px-2 text-center bg-[#F2A93C] text-white rounded-full font-bold text-xs sm:text-sm hover:opacity-90 transition-all active:scale-95 whitespace-nowrap cursor-pointer">
               Review
             </button>
-            <button onClick={() => setDeclineModal(true)} className="flex-1 py-3 bg-[#DF2721] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">
+            <button onClick={() => setDeclineModal(true)} className="flex-1 py-3 px-2 text-center bg-[#DF2721] text-white rounded-full font-bold text-xs sm:text-sm hover:opacity-90 transition-all active:scale-95 whitespace-nowrap cursor-pointer">
               Decline
             </button>
           </div>
@@ -151,10 +329,13 @@ export default function CreditScoringDetailPage() {
                 <h3 className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#0b1c30]">Mengapa skor ini?</h3>
                 <p className="text-[#444655] text-sm font-medium">Analisis faktor pendorong kepercayaan (Explainable AI)</p>
               </div>
-              <div className="flex items-center gap-1 text-[#0029a1] font-bold cursor-pointer hover:underline whitespace-nowrap">
+              <button 
+                onClick={handleLihatSemuaData}
+                className="flex items-center gap-1 text-[#0029a1] font-bold hover:underline whitespace-nowrap bg-transparent border-none cursor-pointer"
+              >
                 <span className="text-[12px] font-semibold tracking-[0.05em]">LIHAT SEMUA DATA</span>
                 <span className="material-symbols-outlined text-sm">open_in_new</span>
-              </div>
+              </button>
             </div>
             <div className="space-y-8">
               {scoringFactors.map((factor, i) => (
@@ -205,13 +386,13 @@ export default function CreditScoringDetailPage() {
             <p className="text-sm text-[#444655]">Anda akan menyetujui kredit untuk:</p>
           </div>
           <div className="space-y-3">
-            <div className="flex justify-between text-sm"><span className="text-[#444655]">Pelanggan</span><span className="font-bold">{customer.name}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-[#444655]">Skor</span><span className="font-bold">{score}</span></div>
-            <div className="flex justify-between text-sm"><span className="text-[#444655]">Limit Kredit</span><span className="font-bold text-[#0029a1]">{customer.approvedLimit}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-[#444655]">Pelanggan</span><span className="font-bold text-[#0b1c30]">{customer.name}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-[#444655]">Skor</span><span className="font-bold text-[#0b1c30]">{score}</span></div>
+            <div className="flex justify-between text-sm"><span className="text-[#444655]">Limit Kredit</span><span className="font-bold text-[#0029a1]">{customer.approvedLimit === "Ditolak" ? "Rp 15.000.000.000" : customer.approvedLimit}</span></div>
           </div>
           <div className="flex gap-3 pt-2">
-            <button onClick={() => setApproveModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all">Batal</button>
-            <button onClick={handleApprove} className="flex-1 py-3 bg-[#1FA463] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">Konfirmasi</button>
+            <button onClick={() => setApproveModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all cursor-pointer">Batal</button>
+            <button onClick={handleApprove} className="flex-1 py-3 bg-[#1FA463] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95 cursor-pointer">Konfirmasi</button>
           </div>
         </div>
       </Modal>
@@ -235,8 +416,8 @@ export default function CreditScoringDetailPage() {
             />
           </div>
           <div className="flex gap-3 pt-2">
-            <button onClick={() => setReviewModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all">Batal</button>
-            <button onClick={handleReview} className="flex-1 py-3 bg-[#F2A93C] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">Submit</button>
+            <button onClick={() => setReviewModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all cursor-pointer">Batal</button>
+            <button onClick={handleReview} className="flex-1 py-3 bg-[#F2A93C] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95 cursor-pointer">Submit</button>
           </div>
         </div>
       </Modal>
@@ -274,8 +455,8 @@ export default function CreditScoringDetailPage() {
             />
           </div>
           <div className="flex gap-3 pt-2">
-            <button onClick={() => setDeclineModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all">Batal</button>
-            <button onClick={handleDecline} className="flex-1 py-3 bg-[#DF2721] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95">Tolak</button>
+            <button onClick={() => setDeclineModal(false)} className="flex-1 py-3 border border-[#c4c5d8] rounded-full font-semibold hover:bg-[#f8f9ff] transition-all cursor-pointer">Batal</button>
+            <button onClick={handleDecline} className="flex-1 py-3 bg-[#DF2721] text-white rounded-full font-bold hover:opacity-90 transition-all active:scale-95 cursor-pointer">Tolak</button>
           </div>
         </div>
       </Modal>

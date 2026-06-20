@@ -1,15 +1,30 @@
 "use client";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { customers, activityFeed } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { getStoredCustomers } from "@/lib/storage";
+import { Customer, activityFeed } from "@/lib/data";
 
 const tabs = ["Ringkasan", "Riwayat Layanan", "Suku Cadang", "Aktivitas Armada", "Riwayat Kredit"];
 
 export default function CustomerDetailPage() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(0);
-  const customer = customers.find((c) => c.id === id) || customers[0];
+  const [customer, setCustomer] = useState<Customer | null>(null);
+
+  useEffect(() => {
+    const list = getStoredCustomers();
+    const found = list.find((c) => c.id === id) || list[0] || null;
+    setCustomer(found);
+  }, [id]);
+
+  if (!customer) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#003ada]"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -23,7 +38,7 @@ export default function CustomerDetailPage() {
       </div>
 
       {/* Customer Hero Card */}
-      <div className="nexus-gradient rounded-xl p-8 mb-10 text-white flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+      <div className="nexus-gradient rounded-xl p-8 mb-10 text-white flex flex-col md:flex-row justify-between items-stretch md:items-center relative overflow-hidden gap-6">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl" />
         <div className="relative z-10 flex flex-col gap-6">
           <div>
@@ -81,12 +96,12 @@ export default function CustomerDetailPage() {
         {/* Left Column */}
         <div className="lg:col-span-8">
           {/* Tab Control */}
-          <div className="bg-[#eff4ff] p-1.5 rounded-full flex gap-1 mb-8">
+          <div className="bg-[#eff4ff] p-1.5 rounded-full flex gap-1 mb-8 overflow-x-auto flex-nowrap no-scrollbar">
             {tabs.map((tab, i) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(i)}
-                className={`flex-1 py-2.5 px-4 rounded-full text-sm transition-all ${
+                className={`py-2.5 px-4 rounded-full text-sm transition-all shrink-0 cursor-pointer ${
                   activeTab === i
                     ? "bg-white text-[#0029a1] font-semibold shadow-sm"
                     : "text-[#444655] hover:bg-white/50"
@@ -103,7 +118,7 @@ export default function CustomerDetailPage() {
               <>
                 <div className="flex justify-between items-center mb-8">
                   <h3 className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#0b1c30]">Aktivitas Operasional Terbaru</h3>
-                  <button className="text-[#0029a1] font-semibold text-sm flex items-center gap-1 hover:underline">
+                  <button className="text-[#0029a1] font-semibold text-sm flex items-center gap-1 hover:underline cursor-pointer">
                     Lihat Semua <span className="material-symbols-outlined text-sm">chevron_right</span>
                   </button>
                 </div>
@@ -282,11 +297,11 @@ export default function CustomerDetailPage() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-[#c4c5d8]/30">
             <h4 className="font-semibold text-[#0b1c30] mb-4">Aksi Cepat</h4>
             <div className="grid grid-cols-2 gap-3">
-              <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-[#c4c5d8]/30 hover:bg-[#eff4ff] transition-all">
+              <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-[#c4c5d8]/30 hover:bg-[#eff4ff] transition-all cursor-pointer">
                 <span className="material-symbols-outlined text-[#0029a1]">request_quote</span>
                 <span className="text-xs font-semibold">Pemfakturan</span>
               </button>
-              <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-[#c4c5d8]/30 hover:bg-[#eff4ff] transition-all">
+              <button className="flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-[#c4c5d8]/30 hover:bg-[#eff4ff] transition-all cursor-pointer">
                 <span className="material-symbols-outlined text-[#0029a1]">contact_support</span>
                 <span className="text-xs font-semibold">Kontak</span>
               </button>

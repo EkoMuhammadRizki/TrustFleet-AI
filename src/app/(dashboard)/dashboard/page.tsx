@@ -1,21 +1,160 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { customers } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { getStoredCustomers, saveStoredCustomers } from "@/lib/storage";
+import { Customer } from "@/lib/data";
+import Swal from "sweetalert2";
 
 export default function DashboardPage() {
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
-  const dashboardCustomers = customers.slice(0, 4);
+  const [customerList, setCustomerList] = useState<Customer[]>([]);
+
+  useEffect(() => {
+    setCustomerList(getStoredCustomers());
+  }, []);
+
+  const handleNewAssessment = () => {
+    Swal.fire({
+      title: "Penilaian Risiko Baru",
+      html: `
+        <div class="space-y-4 font-[var(--font-inter)] text-left">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Nama Perusahaan / Armada</label>
+            <input id="swal-company-name" class="swal2-input !mx-0 !w-full" placeholder="Contoh: PT Logistics Jaya">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Bidang Industri</label>
+            <select id="swal-company-industry" class="swal2-input !mx-0 !w-full !p-3">
+              <option value="Logistik & Transportasi">Logistik & Transportasi</option>
+              <option value="Kurir & Pengiriman">Kurir & Pengiriman</option>
+              <option value="Rantai Pasok">Rantai Pasok</option>
+              <option value="Kargo Udara & Darat">Kargo Udara & Darat</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Ukuran Armada (Unit)</label>
+            <input id="swal-company-fleet" type="number" class="swal2-input !mx-0 !w-full" placeholder="Contoh: 15">
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonColor: "#003ada",
+      cancelButtonColor: "#747687",
+      confirmButtonText: "Jalankan AI Scoring",
+      cancelButtonText: "Batal",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)]",
+      },
+      preConfirm: () => {
+        const name = (document.getElementById("swal-company-name") as HTMLInputElement).value;
+        const industry = (document.getElementById("swal-company-industry") as HTMLSelectElement).value;
+        const fleet = (document.getElementById("swal-company-fleet") as HTMLInputElement).value;
+        if (!name || !fleet) {
+          Swal.showValidationMessage("Semua bidang harus diisi!");
+          return false;
+        }
+        return { name, industry, fleetSize: parseInt(fleet) };
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let progress = 0;
+        Swal.fire({
+          title: "Menghubungkan Data Telematika...",
+          html: `
+            <div class="w-full bg-[#003ada]/10 h-3 rounded-full overflow-hidden mt-4">
+              <div id="swal-progress-bar" class="bg-gradient-to-r from-[#003ADA] to-[#1FA463] h-full rounded-full transition-all duration-200" style="width: 0%"></div>
+            </div>
+            <p id="swal-progress-text" class="text-xs font-semibold text-slate-500 mt-2">Menganalisis riwayat servis armada...</p>
+          `,
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          customClass: {
+            popup: "rounded-[24px] font-[var(--font-inter)]",
+          },
+          didOpen: () => {
+            const bar = document.getElementById("swal-progress-bar");
+            const text = document.getElementById("swal-progress-text");
+            const interval = setInterval(() => {
+              progress += 10;
+              if (bar) bar.style.width = `${progress}%`;
+              if (text) {
+                if (progress === 30) text.innerText = "Menganalisis utilisasi armada...";
+                if (progress === 60) text.innerText = "Mengevaluasi transaksi bahan bakar...";
+                if (progress === 80) text.innerText = "Menghitung indeks risiko alternatif...";
+              }
+              if (progress >= 100) {
+                clearInterval(interval);
+                
+                const mockScore = Math.floor(Math.random() * 400) + 500; // 500 to 900
+                const isLow = mockScore >= 700;
+                const isMed = mockScore >= 550 && mockScore < 700;
+                const riskLevel = isLow ? "low" : isMed ? "medium" : "high";
+                const riskLabel = isLow ? "Risiko Rendah" : isMed ? "Risiko Sedang" : "Risiko Tinggi";
+                const approvedLimit = riskLevel === "high" ? "Ditolak" : `Rp ${(Math.floor(Math.random() * 30) + 5)}.000.000.000`;
+                
+                const newCustomer: Customer = {
+                  id: result.value.name.toLowerCase().replace(/\s+/g, "-"),
+                  name: result.value.name,
+                  initials: result.value.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2),
+                  industry: result.value.industry,
+                  region: "Domestik",
+                  fleetSize: result.value.fleetSize,
+                  vehicleLabel: `${result.value.fleetSize} Kendaraan`,
+                  score: mockScore,
+                  riskLevel: riskLevel as any,
+                  riskLabel: riskLabel,
+                  approvedLimit: approvedLimit,
+                  status: (riskLevel === "high" ? "declined" : "pending") as any,
+                  activeRoutes: "5 Domestik",
+                  joinDate: "Juni 2026"
+                };
+
+                const updatedList = [newCustomer, ...customerList];
+                setCustomerList(updatedList);
+                saveStoredCustomers(updatedList);
+
+                Swal.fire({
+                  icon: "success",
+                  title: "Penilaian Selesai!",
+                  html: `
+                    <div class="space-y-3 font-[var(--font-inter)] text-center mt-3">
+                      <p class="text-sm text-slate-500">Hasil Analisis TrustScore untuk <strong>${newCustomer.name}</strong>:</p>
+                      <div class="inline-block px-6 py-3 rounded-full ${isLow ? 'bg-[#1FA463]/10 text-[#1FA463]' : isMed ? 'bg-[#F2A93C]/10 text-[#F2A93C]' : 'bg-[#DF2721]/10 text-[#DF2721]'} font-extrabold text-xl">
+                        Skor: ${mockScore} (${riskLabel})
+                      </div>
+                      <p class="text-xs text-slate-400">Limit Rekomendasi: <strong class="text-[#003ada]">${approvedLimit}</strong></p>
+                    </div>
+                  `,
+                  confirmButtonColor: "#003ada",
+                  confirmButtonText: "Selesai",
+                  customClass: {
+                    popup: "rounded-[24px] font-[var(--font-inter)]",
+                  }
+                });
+              }
+            }, 200);
+          }
+        });
+      }
+    });
+  };
+
+  const dashboardCustomers = customerList.slice(0, 4);
+
+  // Dynamic KPI stats
+  const totalScored = 1280 + customerList.length;
+  const highRisk = 40 + customerList.filter(c => c.riskLevel === "high").length;
+  const avgScore = customerList.length > 0 ? Math.round(customerList.reduce((acc, c) => acc + c.score, 0) / customerList.length) : 742;
 
   return (
     <>
       {/* Welcome Header */}
-      <div className="mb-8 flex justify-between items-end">
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <h2 className="font-[var(--font-jakarta)] text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-[#0b1c30]">Ringkasan Kecerdasan Armada</h2>
           <p className="font-[var(--font-inter)] text-[14px] text-[#444655] mt-1">Penilaian risiko kredit alternatif real-time untuk portofolio armada Anda.</p>
         </div>
-        <button suppressHydrationWarning={true} className="bg-[#003ada] text-white font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-md active:scale-95">
+        <button onClick={handleNewAssessment} suppressHydrationWarning={true} className="bg-[#003ada] text-white font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-md active:scale-95 shrink-0 w-full sm:w-auto justify-center cursor-pointer">
           <span className="material-symbols-outlined text-[20px]">add</span>
           Penilaian Risiko Baru
         </button>
@@ -24,9 +163,9 @@ export default function DashboardPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {[
-          { icon: "groups", label: "Total Pelanggan Diskor", value: "1,284", badge: "+12%", badgeColor: "bg-[#1FA463]/20" },
-          { icon: "speed", label: "Rata-rata Skor Kredit", value: "742", badge: "Optimal", badgeColor: "bg-[#F2A93C]/20" },
-          { icon: "error", label: "Pelanggan Risiko Tinggi", value: "42", badge: "-3%", badgeColor: "bg-[#DF2721]/20" },
+          { icon: "groups", label: "Total Pelanggan Diskor", value: totalScored.toLocaleString(), badge: "+12%", badgeColor: "bg-[#1FA463]/20" },
+          { icon: "speed", label: "Rata-rata Skor Kredit", value: avgScore.toString(), badge: "Optimal", badgeColor: "bg-[#F2A93C]/20" },
+          { icon: "error", label: "Pelanggan Risiko Tinggi", value: highRisk.toString(), badge: "-3%", badgeColor: "bg-[#DF2721]/20" },
           { icon: "account_balance_wallet", label: "Total Limit Disetujui", value: "Rp 372 Miliar", badge: "IDR", badgeColor: "bg-white/20" },
         ].map((kpi) => (
           <div key={kpi.label} className="kpi-card-gradient p-6 rounded-[24px] shadow-lg text-white relative overflow-hidden group">
@@ -92,7 +231,7 @@ export default function DashboardPage() {
               )}
               {!hoveredSegment && (
                 <>
-                  <span className="font-[var(--font-jakarta)] text-[28px] font-bold">1.284</span>
+                  <span className="font-[var(--font-jakarta)] text-[28px] font-bold">{totalScored.toLocaleString()}</span>
                   <span className="text-[10px] text-[#444655] uppercase tracking-widest font-bold">Total</span>
                 </>
               )}
@@ -152,13 +291,13 @@ export default function DashboardPage() {
                   return (
                     <tr key={c.id} className="group hover:bg-[#eff4ff] transition-colors cursor-pointer">
                       <td className="py-4">
-                        <Link href={`/customers/${c.id}`} className="flex items-center gap-3">
+                        <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-[#dde1ff] flex items-center justify-center font-bold text-[#0029a1] text-xs">{c.initials}</div>
                           <div>
                             <p className="font-[var(--font-inter)] text-[14px] font-bold text-[#0b1c30]">{c.name}</p>
                             <p className="text-[12px] text-[#444655]">{c.vehicleLabel}</p>
                           </div>
-                        </Link>
+                        </div>
                       </td>
                       <td className="py-4"><span className="font-[var(--font-inter)] text-[14px] font-semibold">{c.score}</span></td>
                       <td className="py-4">
@@ -171,8 +310,9 @@ export default function DashboardPage() {
                           {c.approvedLimit}
                         </span>
                       </td>
-                      <td className="py-4 text-right">
-                        <Link href={`/customers/${c.id}`} className="material-symbols-outlined text-[#747687] hover:text-[#0029a1] transition-colors">more_horiz</Link>
+                      <td className="py-4 text-right flex items-center justify-end gap-2">
+                        <Link href={`/customers/${c.id}`} className="text-xs bg-[#eff4ff] hover:bg-[#dee1ff] text-[#0029a1] font-semibold py-1 px-3.5 rounded-full transition-colors">Profil</Link>
+                        <Link href={`/credit-scoring/${c.id}`} className="text-xs bg-[#003ada] hover:bg-[#0029a1] text-white font-semibold py-1 px-3.5 rounded-full transition-colors">Scoring</Link>
                       </td>
                     </tr>
                   );
@@ -183,8 +323,8 @@ export default function DashboardPage() {
         </div>
 
         {/* AI Recommendation Card */}
-        <div className="col-span-12 bg-white p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm relative overflow-hidden flex items-center">
-          <div className="flex-1 pr-12">
+        <div className="col-span-12 bg-white p-6 md:p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-start md:items-center gap-6">
+          <div className="flex-1 md:pr-12">
             <div className="flex items-center gap-3 mb-4">
               <span className="material-symbols-outlined text-[#003ada] bg-[#dee1ff] p-2 rounded-full" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
               <h4 className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#0b1c30]">Rekomendasi TrustFleet AI</h4>
@@ -193,8 +333,8 @@ export default function DashboardPage() {
               Berdasarkan data telematika real-time dan riwayat transaksi, <strong>Global Haulage</strong> menunjukkan tanda-tanda volatilitas arus kas meskipun ukuran armadanya besar. AI menyarankan untuk mengurangi ambang batas kredit sebesar 15% untuk kuartal berikutnya hingga stabilitas operasional membaik.
             </p>
           </div>
-          <div>
-            <Link href="/credit-scoring/global-haulage" className="bg-[#dce9ff] text-[#0029a1] font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full hover:bg-[#d3e4ff] transition-all">Tinjau Detail</Link>
+          <div className="w-full md:w-auto">
+            <Link href="/credit-scoring/global-haulage" className="bg-[#dce9ff] text-[#0029a1] font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full hover:bg-[#d3e4ff] transition-all block text-center w-full md:w-auto whitespace-nowrap cursor-pointer">Tinjau Detail</Link>
           </div>
         </div>
       </div>

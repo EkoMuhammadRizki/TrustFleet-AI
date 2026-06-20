@@ -1,13 +1,19 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { customers } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { getStoredCustomers } from "@/lib/storage";
+import { Customer } from "@/lib/data";
 
 export default function CustomersListPage() {
+  const [customerList, setCustomerList] = useState<Customer[]>([]);
   const [search, setSearch] = useState("");
   const [riskFilter, setRiskFilter] = useState<string>("all");
 
-  const filtered = customers.filter((c) => {
+  useEffect(() => {
+    setCustomerList(getStoredCustomers());
+  }, []);
+
+  const filtered = customerList.filter((c) => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.industry.toLowerCase().includes(search.toLowerCase());
     const matchRisk = riskFilter === "all" || c.riskLevel === riskFilter;
     return matchSearch && matchRisk;
@@ -48,7 +54,7 @@ export default function CustomersListPage() {
           <button
             key={f.value}
             onClick={() => setRiskFilter(f.value)}
-            className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all ${
+            className={`px-5 py-2.5 rounded-full border text-[14px] font-semibold transition-all cursor-pointer ${
               riskFilter === f.value
                 ? "bg-[#003ada] text-white border-[#003ada]"
                 : "bg-white text-[#0b1c30] border-[#c4c5d8]/40 hover:border-[#003ada]/50"
@@ -118,7 +124,7 @@ export default function CustomersListPage() {
           </table>
         </div>
         <div className="px-8 py-6 bg-[#eff4ff]/30 flex items-center justify-between border-t border-[#c4c5d8]/10">
-          <span className="text-[12px] font-semibold text-[#747687]">Menampilkan {filtered.length} dari {customers.length} pelanggan</span>
+          <span className="text-[12px] font-semibold text-[#747687]">Menampilkan {filtered.length} dari {customerList.length} pelanggan</span>
           <div className="flex gap-2">
             <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#c4c5d8]/30 bg-white shadow-sm font-bold">1</button>
             <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#c4c5d8]/30 hover:bg-white transition-colors">2</button>
