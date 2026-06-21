@@ -398,7 +398,7 @@ export default function SettingsPage() {
   return (
     <>
       {/* Tab Navigation */}
-      <div className="bg-[#eff4ff] p-1.5 rounded-full flex gap-1 mb-8 shadow-inner border border-[#c4c5d8]/20 overflow-x-auto flex-nowrap no-scrollbar">
+      <div className="w-full bg-[#eff4ff] p-1.5 rounded-full flex gap-1 mb-8 shadow-inner border border-[#c4c5d8]/20 overflow-x-auto flex-nowrap no-scrollbar">
         {settingsTabs.map((tab, i) => (
           <button
             key={tab}
@@ -418,7 +418,7 @@ export default function SettingsPage() {
         {/* Left Column (Persistent Profile Card & Completeness) */}
         <div className="col-span-12 lg:col-span-4 space-y-6">
           {/* Profile Card */}
-          <div className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 flex flex-col items-center text-center">
+          <div className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 flex flex-col items-center text-center">
             <div className="relative mb-6">
               <div className="w-32 h-32 rounded-full border-4 border-[#003ada] p-1">
                 <div className="w-full h-full rounded-full bg-[#003ada] flex items-center justify-center text-white font-bold text-4xl">
@@ -444,7 +444,7 @@ export default function SettingsPage() {
           </div>
 
           {/* Account Health */}
-          <div className="bg-[#0029a1] p-8 rounded-[24px] shadow-lg text-white relative overflow-hidden">
+          <div className="bg-[#0029a1] p-5 sm:p-8 rounded-[24px] shadow-lg text-white relative overflow-hidden">
             <div className="relative z-10">
               <h4 className="font-[var(--font-jakarta)] text-[20px] font-bold mb-2">Verifikasi Akun</h4>
               <p className="text-[#b5c0ff]/70 text-sm mb-6">Profil Anda 85% lengkap. Selesaikan verifikasi untuk membuka batas API yang lebih tinggi.</p>
@@ -463,7 +463,7 @@ export default function SettingsPage() {
           {/* TAB 0: UMUM */}
           {activeTab === 0 && (
             <form onSubmit={handleGeneralSubmit} className="space-y-6">
-              <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30">
+              <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
                     <span className="material-symbols-outlined">person</span>
@@ -503,7 +503,7 @@ export default function SettingsPage() {
                 </div>
               </section>
 
-              <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30">
+              <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
                     <span className="material-symbols-outlined">tune</span>
@@ -545,7 +545,7 @@ export default function SettingsPage() {
 
           {/* TAB 1: KEAMANAN */}
           {activeTab === 1 && (
-            <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
+            <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
                   <span className="material-symbols-outlined">security</span>
@@ -618,7 +618,7 @@ export default function SettingsPage() {
 
           {/* TAB 2: MANAJEMEN TIM */}
           {activeTab === 2 && (
-            <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
+            <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
               <div className="flex items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
@@ -637,17 +637,17 @@ export default function SettingsPage() {
 
               <div className="divide-y divide-[#c4c5d8]/20">
                 {settings.team.map((member: any) => (
-                  <div key={member.email} className="py-4 flex justify-between items-center">
+                  <div key={member.email} className="py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#003ada]/10 text-[#003ada] flex items-center justify-center font-bold text-sm">
+                      <div className="w-10 h-10 rounded-full bg-[#003ada]/10 text-[#003ada] flex items-center justify-center font-bold text-sm shrink-0">
                         {member.initials}
                       </div>
-                      <div>
-                        <p className="font-bold text-[#0b1c30] text-sm">{member.name}</p>
-                        <p className="text-xs text-slate-500">{member.email}</p>
+                      <div className="overflow-hidden">
+                        <p className="font-bold text-[#0b1c30] text-sm truncate">{member.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{member.email}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end shrink-0">
                       <span className="text-xs bg-[#eff4ff] text-[#0029a1] font-bold px-3 py-1 rounded-full border border-[#0029a1]/10">
                         {member.role}
                       </span>
@@ -666,7 +666,7 @@ export default function SettingsPage() {
 
           {/* TAB 3: NOTIFIKASI */}
           {activeTab === 3 && (
-            <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
+            <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
                   <span className="material-symbols-outlined">notifications</span>
@@ -739,7 +739,7 @@ export default function SettingsPage() {
           {activeTab === 4 && (
             <div className="space-y-6">
               {/* API Keys */}
-              <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
+              <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
                 <div className="flex justify-between items-center gap-3 mb-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
@@ -779,7 +779,7 @@ export default function SettingsPage() {
               </section>
 
               {/* Telematics Integrations */}
-              <section className="bg-white p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
+              <section className="bg-white p-5 sm:p-8 rounded-[24px] shadow-sm border border-[#c4c5d8]/30 space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 bg-[#003ada]/10 rounded-full text-[#003ada]">
                     <span className="material-symbols-outlined">devices_other</span>

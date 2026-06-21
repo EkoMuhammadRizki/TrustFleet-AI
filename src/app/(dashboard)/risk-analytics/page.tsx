@@ -372,7 +372,7 @@ Dokumen Terverifikasi & Aman.
 
           {currentItems.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[900px]">
                 <thead>
                   <tr className="bg-[#eff4ff]/30 text-[12px] font-semibold tracking-[0.05em] text-[#747687] uppercase">
                     <th className="px-8 py-4">Nama Perusahaan</th>
@@ -416,7 +416,7 @@ Dokumen Terverifikasi & Aman.
                         </td>
                         <td className="px-8 py-5 text-right font-bold text-[#0b1c30]">{c.approvedLimit}</td>
                         <td className="px-8 py-5 text-center">
-                          <Link href={`/customers/${c.id}`} className="text-[#003ada] font-semibold hover:bg-[#003ada]/5 px-4 py-1.5 rounded-full transition-colors">Detail</Link>
+                          <Link href={`/customers/${c.id}`} className="inline-block text-[#003ada] font-semibold hover:bg-[#003ada]/5 px-4 py-1.5 rounded-full transition-colors whitespace-nowrap">Detail</Link>
                         </td>
                       </tr>
                     );

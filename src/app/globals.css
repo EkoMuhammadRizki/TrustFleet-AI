@@ -192,11 +192,16 @@
 /* ---- Base styles ---- */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
 }
 body {
   background-color: #FAFAFC;
   font-family: "Inter", sans-serif;
   color: #0b1c30;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 /* ---- Toast Animation ---- */

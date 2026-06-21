@@ -151,8 +151,8 @@ export default function LandingPage() {
         id="main-header"
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       >
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-[1440px] mx-auto px-3 sm:px-4 md:px-8 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             {/* Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -162,7 +162,7 @@ export default function LandingPage() {
                 {isMobileMenuOpen ? 'close' : 'menu'}
               </span>
             </button>
-            <div className="w-10 h-10 md:w-12 md:h-12 relative">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 relative shrink-0">
               <Image
                 src="/logo/TrustFleetAILogoNavy.png"
                 alt="TrustFleet AI Logo"
@@ -171,8 +171,8 @@ export default function LandingPage() {
               />
             </div>
             <div>
-              <p className="font-[var(--font-inter)] font-bold text-base md:text-xl text-[#061649]">TrustFleet AI</p>
-              <p className="text-[10px] md:text-[11px] text-[#5B6B82]">Intelegensi Fintech</p>
+              <p className="font-[var(--font-inter)] font-bold text-sm sm:text-base md:text-xl text-[#061649]">TrustFleet AI</p>
+              <p className="hidden sm:block text-[10px] md:text-[11px] text-[#5B6B82]">Intelegensi Fintech</p>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-8">
@@ -184,7 +184,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="hidden sm:block font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] text-[#061649] hover:text-[#003ADA] transition-all duration-300">Masuk</Link>
-            <Link href="/dashboard" className="bg-[#003ADA] text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full font-[var(--font-inter)] text-[11px] md:text-[12px] font-semibold tracking-[0.05em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-[#003ADA]/20 hover:shadow-[#003ADA]/30">
+            <Link href="/dashboard" className="inline-block bg-[#003ADA] text-white px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full font-[var(--font-inter)] text-[10px] sm:text-[11px] md:text-[12px] font-semibold tracking-[0.05em] hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-[#003ADA]/20 hover:shadow-[#003ADA]/30 whitespace-nowrap">
               Mulai Sekarang
             </Link>
           </div>
@@ -261,7 +261,7 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
                 <Link href="/dashboard" className="w-full sm:w-auto bg-[#003ADA] text-white px-8 py-4 rounded-full font-[var(--font-jakarta)] text-[18px] font-bold hover:shadow-xl hover:shadow-[#003ADA]/30 transition-all duration-300 flex items-center justify-center gap-2">
-                  Ajukan Demo
+                  Lihat Demo
                   <span className="material-symbols-outlined">chevron_right</span>
                 </Link>
                 <a href="#features" className="w-full sm:w-auto border-2 border-[#003ADA] text-[#003ADA] px-8 py-4 rounded-full font-[var(--font-jakarta)] text-[18px] font-bold hover:bg-[#003ADA]/5 transition-all duration-300">
@@ -279,121 +279,124 @@ export default function LandingPage() {
                 <p className="text-[12px] font-semibold text-[#5B6B82]">Dipercaya oleh <span className="font-bold text-[#061649]">500+</span> Mitra Armada</p>
               </div>
             </div>
-            <div className="relative animate-card opacity-0 translate-y-10 transition-all duration-700 delay-200 min-h-[500px] w-full flex items-center justify-center order-1 lg:order-2">
+            <div className="relative animate-card opacity-0 translate-y-10 transition-all duration-700 delay-200 min-h-[380px] sm:min-h-[500px] w-full flex items-center justify-center order-1 lg:order-2">
               {/* Background Glows */}
               <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-[#003ADA]/10 rounded-full blur-3xl -z-10"></div>
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#C5E1EF]/30 rounded-full blur-2xl -z-10"></div>
 
-              {/* Card 1: Data Input (Telematics) - Top-Left Layer */}
-              <div className="absolute top-0 left-2 sm:left-0 w-[240px] sm:w-[280px] bg-white p-5 rounded-[20px] shadow-lg border border-[#E5EAF3] transform -rotate-6 hover:-rotate-2 transition-all duration-500 hover:scale-105 hover:z-20 group">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-[#eff4ff] flex items-center justify-center text-[#003ADA]">
-                    <span className="material-symbols-outlined text-[20px]">local_shipping</span>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-[#747687] uppercase tracking-wider">Telematika Armada</p>
-                    <h4 className="text-[13px] font-bold text-[#061649] truncate">Actros #992</h4>
-                  </div>
-                </div>
-                
-                {/* Driver Avatar & Stats */}
-                <div className="flex items-center gap-3 bg-[#FAFAFC] p-2.5 rounded-xl border border-[#E5EAF3]/60 mb-3">
-                  <div className="w-8 h-8 rounded-full bg-[#1FA463]/10 border border-[#1FA463]/20 flex items-center justify-center text-[16px] shrink-0 select-none">
-                    👷
-                  </div>
-                  <div className="overflow-hidden">
-                    <p className="text-[11px] font-bold text-[#061649] truncate">Budi Santoso</p>
-                    <p className="text-[9px] text-[#5B6B82]">Pengemudi Utama</p>
-                  </div>
-                  <div className="ml-auto w-2 h-2 rounded-full bg-[#1FA463] animate-pulse"></div>
-                </div>
-
-                <div className="space-y-1.5 text-[10px] text-[#5B6B82]">
-                  <div className="flex justify-between">
-                    <span>Jarak Tempuh:</span>
-                    <span className="font-bold text-[#061649]">8.450 Km</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Kesehatan Mesin:</span>
-                    <span className="font-bold text-[#1FA463]">98% (Optimal)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2: AI TrustScore Engine (Process) - Top-Right Layer */}
-              <div className="absolute top-12 right-2 sm:right-0 w-[240px] sm:w-[280px] glass-card p-5 rounded-[20px] shadow-xl transform rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-20 group">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-[16px] select-none">🧠</span>
-                  <h4 className="font-[var(--font-jakarta)] text-[13px] font-extrabold text-[#0029a1]">AI TrustScore Engine</h4>
-                </div>
-                
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
-                      <span>Rutin Servis (+45 Pts)</span>
-                      <span className="text-[#1FA463]">85%</span>
+              {/* Scaling wrapper for cards */}
+              <div className="relative w-full h-[380px] sm:h-[500px] flex items-center justify-center scale-[0.8] sm:scale-100 origin-center shrink-0">
+                {/* Card 1: Data Input (Telematics) - Top-Left Layer */}
+                <div className="absolute top-0 left-2 sm:left-0 w-[210px] sm:w-[280px] bg-white p-5 rounded-[20px] shadow-lg border border-[#E5EAF3] transform -rotate-6 hover:-rotate-2 transition-all duration-500 hover:scale-105 hover:z-20 group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-[#eff4ff] flex items-center justify-center text-[#003ADA]">
+                      <span className="material-symbols-outlined text-[20px]">local_shipping</span>
                     </div>
-                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-[#1FA463] h-full w-[85%]" />
+                    <div>
+                      <p className="text-[10px] font-bold text-[#747687] uppercase tracking-wider">Telematika Armada</p>
+                      <h4 className="text-[13px] font-bold text-[#061649] truncate">Actros #992</h4>
                     </div>
+                  </div>
+                  
+                  {/* Driver Avatar & Stats */}
+                  <div className="flex items-center gap-3 bg-[#FAFAFC] p-2.5 rounded-xl border border-[#E5EAF3]/60 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-[#1FA463]/10 border border-[#1FA463]/20 flex items-center justify-center text-[16px] shrink-0 select-none">
+                      👷
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-[11px] font-bold text-[#061649] truncate">Budi Santoso</p>
+                      <p className="text-[9px] text-[#5B6B82]">Pengemudi Utama</p>
+                    </div>
+                    <div className="ml-auto w-2 h-2 rounded-full bg-[#1FA463] animate-pulse"></div>
                   </div>
 
-                  <div>
-                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
-                      <span>Utilisasi Armada (+28 Pts)</span>
-                      <span className="text-[#1FA463]">92%</span>
+                  <div className="space-y-1.5 text-[10px] text-[#5B6B82]">
+                    <div className="flex justify-between">
+                      <span>Jarak Tempuh:</span>
+                      <span className="font-bold text-[#061649]">8.450 Km</span>
                     </div>
-                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-[#1FA463] h-full w-[92%]" />
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
-                      <span>Tepat Waktu Bayar (+50 Pts)</span>
-                      <span className="text-[#1FA463]">98%</span>
-                    </div>
-                    <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-[#1FA463] h-full w-[98%]" />
+                    <div className="flex justify-between">
+                      <span>Kesehatan Mesin:</span>
+                      <span className="font-bold text-[#1FA463]">98% (Optimal)</span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card 3: Approved Financing & Credit (Output) - Bottom Layer */}
-              <div className="absolute bottom-2 left-4 sm:left-12 w-[260px] sm:w-[320px] bg-gradient-to-br from-[#061649] to-[#003ADA] text-white p-5 rounded-[24px] shadow-2xl transform rotate-1 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-30 group border border-white/10">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <p className="text-[9px] font-semibold text-[#C5E1EF] uppercase tracking-wider">Skor & Limit Kredit</p>
-                    <h3 className="font-[var(--font-jakarta)] text-[16px] font-extrabold mt-0.5 text-white">Institusional A+</h3>
+                {/* Card 2: AI TrustScore Engine (Process) - Top-Right Layer */}
+                <div className="absolute top-12 right-2 sm:right-0 w-[210px] sm:w-[280px] glass-card p-5 rounded-[20px] shadow-xl transform rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-20 group">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-[16px] select-none">🧠</span>
+                    <h4 className="font-[var(--font-jakarta)] text-[13px] font-extrabold text-[#0029a1]">AI TrustScore Engine</h4>
                   </div>
-                  <div className="text-right">
-                    <div className="font-[var(--font-jakarta)] text-[22px] font-extrabold text-[#1FA463] flex items-center justify-end gap-1">
-                      <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                      842
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                        <span>Rutin Servis (+45 Pts)</span>
+                        <span className="text-[#1FA463]">85%</span>
+                      </div>
+                      <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-[#1FA463] h-full w-[85%]" />
+                      </div>
                     </div>
-                    <p className="text-[9px] text-[#C5E1EF] font-semibold">Skor Armada</p>
+
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                        <span>Utilisasi Armada (+28 Pts)</span>
+                        <span className="text-[#1FA463]">92%</span>
+                      </div>
+                      <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-[#1FA463] h-full w-[92%]" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[9px] font-bold text-[#0b1c30] mb-1">
+                        <span>Tepat Waktu Bayar (+50 Pts)</span>
+                        <span className="text-[#1FA463]">98%</span>
+                      </div>
+                      <div className="w-full bg-[#003ADA]/10 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-[#1FA463] h-full w-[98%]" />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Credit Limit Mockup */}
-                <div className="bg-white/10 p-3 rounded-xl border border-white/10 mb-4">
-                  <p className="text-[9px] text-[#C5E1EF]">Limit Kredit Disetujui</p>
-                  <p className="font-[var(--font-jakarta)] text-[18px] sm:text-[20px] font-extrabold tracking-tight mt-0.5 text-white">Rp 36 Miliar</p>
-                </div>
+                {/* Card 3: Approved Financing & Credit (Output) - Bottom Layer */}
+                <div className="absolute bottom-2 left-2 sm:left-12 w-[230px] sm:w-[320px] bg-gradient-to-br from-[#061649] to-[#003ADA] text-white p-5 rounded-[24px] shadow-2xl transform rotate-1 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:z-30 group border border-white/10">
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <p className="text-[9px] font-semibold text-[#C5E1EF] uppercase tracking-wider">Skor & Limit Kredit</p>
+                      <h3 className="font-[var(--font-jakarta)] text-[16px] font-extrabold mt-0.5 text-white">Institusional A+</h3>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-[var(--font-jakarta)] text-[22px] font-extrabold text-[#1FA463] flex items-center justify-end gap-1">
+                        <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                        842
+                      </div>
+                      <p className="text-[9px] text-[#C5E1EF] font-semibold">Skor Armada</p>
+                    </div>
+                  </div>
 
-                {/* Risk Officer Avatar */}
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[14px] select-none">
-                    🤵
+                  {/* Credit Limit Mockup */}
+                  <div className="bg-white/10 p-3 rounded-xl border border-white/10 mb-4">
+                    <p className="text-[9px] text-[#C5E1EF]">Limit Kredit Disetujui</p>
+                    <p className="font-[var(--font-jakarta)] text-[18px] sm:text-[20px] font-extrabold tracking-tight mt-0.5 text-white">Rp 36 Miliar</p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-white">Marcus Sterling</p>
-                    <p className="text-[8px] text-[#C5E1EF]">Petugas Risiko</p>
+
+                  {/* Risk Officer Avatar */}
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[14px] select-none">
+                      🤵
+                    </div>
+                    <div>
+                      <p className="font-bold text-white text-[10px]">Marcus Sterling</p>
+                      <p className="text-[8px] text-[#C5E1EF]">Petugas Risiko</p>
+                    </div>
+                    <span className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 bg-[#1FA463]/20 border border-[#1FA463]/30 rounded-full text-[8px] font-bold text-[#1FA463] uppercase tracking-wider">
+                      Disetujui
+                    </span>
                   </div>
-                  <span className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 bg-[#1FA463]/20 border border-[#1FA463]/30 rounded-full text-[8px] font-bold text-[#1FA463] uppercase tracking-wider">
-                    Disetujui
-                  </span>
                 </div>
               </div>
             </div>

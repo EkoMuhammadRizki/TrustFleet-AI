@@ -96,7 +96,7 @@ export default function CreditScoringDirectoryPage() {
       {/* Table */}
       <div className="bg-white rounded-[24px] shadow-sm border border-[#c4c5d8]/10 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
               <tr className="bg-[#eff4ff]/30 text-[12px] font-semibold tracking-[0.05em] text-[#747687] uppercase">
                 <th className="px-8 py-4">Nama Perusahaan</th>
@@ -141,7 +141,7 @@ export default function CreditScoringDirectoryPage() {
                       {c.approvedLimit === "Ditolak" ? "Rp 0" : c.approvedLimit}
                     </td>
                     <td className="px-8 py-5 text-center">
-                      <Link href={`/credit-scoring/${c.id}`} className="bg-[#003ada] text-white font-semibold hover:opacity-90 px-4 py-2 rounded-full transition-colors text-xs shadow-sm">
+                      <Link href={`/credit-scoring/${c.id}`} className="inline-block bg-[#003ada] text-white font-semibold hover:opacity-90 px-4 py-2 rounded-full transition-colors text-xs shadow-sm whitespace-nowrap">
                         Tinjau Skor
                       </Link>
                     </td>

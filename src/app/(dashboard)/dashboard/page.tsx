@@ -191,7 +191,7 @@ export default function DashboardPage() {
       {/* Welcome Header */}
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h2 className="font-[var(--font-jakarta)] text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-[#0b1c30]">Ringkasan Kecerdasan Armada</h2>
+          <h2 className="font-[var(--font-jakarta)] text-2xl sm:text-[32px] font-bold leading-[1.2] tracking-[-0.01em] text-[#0b1c30]">Ringkasan Kecerdasan Armada</h2>
           <p className="font-[var(--font-inter)] text-[14px] text-[#444655] mt-1">Penilaian risiko kredit alternatif real-time untuk portofolio armada Anda.</p>
         </div>
         <button onClick={handleNewAssessment} suppressHydrationWarning={true} className="bg-[#003ada] text-white font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] px-6 py-3 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-md active:scale-95 shrink-0 w-full sm:w-auto justify-center cursor-pointer">
@@ -223,7 +223,7 @@ export default function DashboardPage() {
       {/* Content Grid */}
       <div className="grid grid-cols-12 gap-8">
         {/* Risk Distribution */}
-        <div className="col-span-12 lg:col-span-4 bg-white p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm flex flex-col items-center">
+        <div className="col-span-12 lg:col-span-4 bg-white p-5 sm:p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm flex flex-col items-center">
           <div className="w-full mb-6">
             <h4 className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#0b1c30]">Distribusi Risiko</h4>
             <p className="font-[var(--font-inter)] text-[14px] text-[#444655]">Ringkasan kesehatan portofolio</p>
@@ -302,7 +302,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Scoring Activity */}
-        <div className="col-span-12 lg:col-span-8 bg-white p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm overflow-hidden">
+        <div className="col-span-12 lg:col-span-8 bg-white p-5 sm:p-8 rounded-[24px] border border-[#c4c5d8]/30 shadow-sm overflow-hidden">
           <div className="flex justify-between items-center mb-6">
             <div>
               <h4 className="font-[var(--font-jakarta)] text-[20px] font-bold text-[#0b1c30]">Aktivitas Penilaian Terbaru</h4>
@@ -311,7 +311,7 @@ export default function DashboardPage() {
             <Link href="/customers" className="text-[#0029a1] font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] hover:underline">Lihat Semua Data</Link>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left">
+            <table className="w-full text-left min-w-[600px]">
               <thead>
                 <tr className="border-b border-[#c4c5d8]/30">
                   <th className="pb-4 font-[var(--font-inter)] text-[12px] font-semibold tracking-[0.05em] text-[#747687]/80 uppercase">Pelanggan / Armada</th>
