@@ -36,6 +36,7 @@ export default function TopNavBar({ onMenuClick = () => {} }: { onMenuClick?: ()
       }
     }).then((result) => {
       if (result.isConfirmed) {
+        sessionStorage.removeItem("tf_welcome_shown");
         window.location.href = "/";
       }
     });

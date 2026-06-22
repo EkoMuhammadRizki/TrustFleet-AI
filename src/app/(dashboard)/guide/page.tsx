@@ -5,14 +5,22 @@ export default function GuidePage() {
   const steps = [
     {
       step: "01",
+      icon: "devices_other",
+      title: "Integrasi Sistem Telematika",
+      desc: "Langkah pertama dimulai dengan menghubungkan sistem telematika armada Anda (seperti Samsara, Geotab, atau Webfleet) di menu Integrasi. Pengaturan API Key sekali ini wajib dilakukan di awal agar sistem dapat menarik data sensor operasional armada secara otomatis.",
+      linkText: "Buka Menu Integrasi",
+      linkHref: "/integration"
+    },
+    {
+      step: "02",
       icon: "dashboard",
       title: "Dasbor Utama & Penilaian Baru",
-      desc: "Langkah pertama dimulai di halaman Dashboard. Di sini Anda bisa memantau metrik kesehatan kredit armada UD Trucks Anda. Jika Anda memiliki armada baru yang belum dinilai, klik tombol 'Penilaian Risiko Baru' di pojok kanan atas, isi detail perusahaan, dan jalankan proses AI scoring data telematika.",
+      desc: "Setelah layanan telematika terhubung, buka halaman Dashboard. Klik tombol 'Penilaian Risiko Baru' di pojok kanan atas, isi detail nama perusahaan, dan jalankan kalkulasi AI Scoring untuk memproses metrik operasional secara real-time.",
       linkText: "Buka Dashboard",
       linkHref: "/dashboard"
     },
     {
-      step: "02",
+      step: "03",
       icon: "person_search",
       title: "Evaluasi Pelanggan 360",
       desc: "Buka tab 'Pelanggan 360' atau klik langsung baris perusahaan di dasbor. Di halaman profil pelanggan ini, Anda bisa meninjau detail log operasional armada seperti riwayat servis mesin resmi, riwayat pembelian suku cadang asli (spareparts), kebiasaan mengemudi driver, dan peta rute aktif.",
@@ -20,7 +28,7 @@ export default function GuidePage() {
       linkHref: "/customers"
     },
     {
-      step: "03",
+      step: "04",
       icon: "credit_score",
       title: "Analisis Skor & Explainable AI",
       desc: "Dari halaman detail profil pelanggan, klik 'Lihat Detail Penilaian' untuk masuk ke halaman detail Kredit. Di sini, Anda bisa meninjau TrustScore AI (skor 500-900) beserta rincian transparan pendorong bobot poin ('Mengapa skor ini?'). Anda juga dapat mengklik 'Lihat Semua Data' untuk melihat parameter telematika secara mendalam.",
@@ -28,7 +36,7 @@ export default function GuidePage() {
       linkHref: "/credit-scoring"
     },
     {
-      step: "04",
+      step: "05",
       icon: "task_alt",
       title: "Pengambilan Keputusan Kredit",
       desc: "Di halaman Skor Kredit, Anda dapat mengambil keputusan dengan mengklik salah satu tombol keputusan: 'Approve' (menyetujui limit kredit yang disarankan), 'Review' (mengajukan peninjauan ulang dengan memasukkan catatan evaluasi), atau 'Decline' (menolak dengan memilih alasan penolakan dan deskripsi tambahan). Status pelanggan akan terupdate secara global.",
@@ -36,7 +44,7 @@ export default function GuidePage() {
       linkHref: "/dashboard"
     },
     {
-      step: "05",
+      step: "06",
       icon: "analytics",
       title: "Pemantauan Risiko & Laporan",
       desc: "Gunakan menu 'Analisis Risiko' untuk menyaring portofolio berdasarkan rentang tanggal, tingkat risiko, wilayah (filter lanjutan), dan industri. Ekspor ringkasan tersebut menjadi laporan PDF. Anda juga bisa menggunakan menu 'Laporan' untuk menjadwalkan kompilasi data laporan berkala secara berkala.",

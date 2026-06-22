@@ -10,6 +10,7 @@ const navItems = [
   { href: "/credit-scoring", icon: "credit_score", label: "Skor Kredit" },
   { href: "/risk-analytics", icon: "analytics", label: "Analisis Risiko" },
   { href: "/reports", icon: "assessment", label: "Laporan" },
+  { href: "/integration", icon: "devices_other", label: "Integrasi" },
   { href: "/guide", icon: "menu_book", label: "Panduan" },
   { href: "/settings", icon: "settings", label: "Pengaturan" },
 ];
@@ -39,6 +40,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }: { isOpen
       }
     }).then((result) => {
       if (result.isConfirmed) {
+        sessionStorage.removeItem("tf_welcome_shown");
         window.location.href = "/";
       }
     });

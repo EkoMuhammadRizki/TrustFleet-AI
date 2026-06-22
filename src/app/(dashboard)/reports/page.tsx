@@ -167,6 +167,40 @@ Analisis ini menunjukkan profil kelayakan kredit yang sehat. Indeks TrustScore r
     });
   };
 
+  const handleViewAllCreated = () => {
+    const listHtml = reportList.map((r) => `
+      <div class="flex items-center justify-between p-3.5 border-b border-[#c4c5d8]/20 last:border-none hover:bg-slate-50 transition-colors">
+        <div class="flex items-center gap-3 text-left">
+          <div class="w-8 h-8 rounded-full bg-[#eff4ff] flex items-center justify-center text-[#0029a1] shrink-0">
+            <span class="material-symbols-outlined text-[18px]">description</span>
+          </div>
+          <div>
+            <div class="text-[#0b1c30] font-bold text-xs sm:text-sm">${r.title}</div>
+            <div class="text-[10px] text-slate-400 font-medium">${r.time}</div>
+          </div>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-xs font-bold text-[#0029a1]">${r.type}</div>
+          <div class="text-[10px] text-slate-500">${r.size}</div>
+        </div>
+      </div>
+    `).join("");
+
+    Swal.fire({
+      title: "Semua Laporan yang Dibuat",
+      html: `
+        <div class="divide-y divide-[#c4c5d8]/20 max-h-[350px] overflow-y-auto pr-1">
+          ${listHtml}
+        </div>
+      `,
+      confirmButtonColor: "#003ada",
+      confirmButtonText: "Tutup",
+      customClass: {
+        popup: "rounded-[24px] font-[var(--font-inter)] w-[550px]",
+      }
+    });
+  };
+
   return (
     <>
       {/* KPI Section */}
@@ -291,7 +325,7 @@ Analisis ini menunjukkan profil kelayakan kredit yang sehat. Indeks TrustScore r
           ))}
         </div>
         <div className="mt-8 flex justify-center">
-          <button className="text-[#0029a1] font-bold hover:underline cursor-pointer">Lihat Semua Laporan yang Dibuat</button>
+          <button onClick={handleViewAllCreated} className="text-[#0029a1] font-bold hover:underline cursor-pointer">Lihat Semua Laporan yang Dibuat</button>
         </div>
       </section>
 

@@ -1,13 +1,19 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import { customers } from "@/lib/data";
+import { useEffect, useState } from "react";
+import { getStoredCustomers } from "@/lib/storage";
+import { Customer } from "@/lib/data";
 
 export default function CreditScoringDirectoryPage() {
+  const [customerList, setCustomerList] = useState<Customer[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const filtered = customers.filter((c) => {
+  useEffect(() => {
+    setCustomerList(getStoredCustomers());
+  }, []);
+
+  const filtered = customerList.filter((c) => {
     const matchSearch = c.name.toLowerCase().includes(search.toLowerCase()) || c.industry.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "all" || c.status === statusFilter;
     return matchSearch && matchStatus;
@@ -27,9 +33,9 @@ export default function CreditScoringDirectoryPage() {
   };
 
   // Stats calculation
-  const awaitingReviewCount = customers.filter(c => c.status === "review").length;
-  const approvedCount = customers.filter(c => c.status === "approved").length;
-  const declinedCount = customers.filter(c => c.status === "declined").length;
+  const awaitingReviewCount = customerList.filter(c => c.status === "review").length;
+  const approvedCount = customerList.filter(c => c.status === "approved").length;
+  const declinedCount = customerList.filter(c => c.status === "declined").length;
 
   return (
     <>
@@ -161,7 +167,7 @@ export default function CreditScoringDirectoryPage() {
           </table>
         </div>
         <div className="px-8 py-6 bg-[#eff4ff]/30 flex items-center justify-between border-t border-[#c4c5d8]/10">
-          <span className="text-[12px] font-semibold text-[#747687]">Menampilkan {filtered.length} dari {customers.length} pelanggan</span>
+          <span className="text-[12px] font-semibold text-[#747687]">Menampilkan {filtered.length} dari {customerList.length} pelanggan</span>
         </div>
       </div>
     </>

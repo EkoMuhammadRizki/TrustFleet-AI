@@ -1,59 +1,41 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getStoredCustomers, saveStoredCustomers } from "@/lib/storage";
+import { useRouter } from "next/navigation";
+import { getStoredCustomers, saveStoredCustomers, getStoredIntegrations } from "@/lib/storage";
 import { Customer } from "@/lib/data";
 import Swal from "sweetalert2";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
   const [customerList, setCustomerList] = useState<Customer[]>([]);
 
-  useEffect(() => {
-    setCustomerList(getStoredCustomers());
 
-    if (typeof window !== "undefined") {
-      const welcomeShown = sessionStorage.getItem("tf_welcome_shown");
-      if (!welcomeShown) {
-        sessionStorage.setItem("tf_welcome_shown", "true");
-        Swal.fire({
-          title: "Selamat Datang di TrustFleet AI!",
-          html: `
-            <div class="space-y-4 font-[var(--font-inter)] text-left text-[#444655] leading-relaxed text-[14px] mt-2">
-              <p>
-                Platform Penilaian Risiko Kredit Alternatif berbasis AI untuk membuka pertumbuhan, memitigasi risiko, dan menyederhanakan pembiayaan logistik dengan wawasan telematika yang dapat dijelaskan.
-              </p>
-              <div class="bg-[#eff4ff]/60 p-4 rounded-[20px] border border-[#003ada]/10 space-y-3">
-                <h5 class="font-bold text-[#0b1c30] text-[12px] uppercase tracking-wider flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-[18px] text-[#003ada]">explore</span>
-                  Panduan Cepat Alur Sistem:
-                </h5>
-                <ol class="list-decimal list-inside space-y-2 text-[12px] text-[#444655]">
-                  <li><strong>Dashboard:</strong> Pantau skor portofolio & buat penilaian risiko baru.</li>
-                  <li><strong>Pelanggan 360:</strong> Cek telematika, rute, servis, & log armada.</li>
-                  <li><strong>Skor Kredit:</strong> Tinjau penjelasan skor AI & tetapkan keputusan kredit.</li>
-                  <li><strong>Analisis Risiko & Laporan:</strong> Saring portofolio & unduh laporan PDF.</li>
-                </ol>
-              </div>
-              <div class="flex items-center gap-3 p-3 bg-amber-50 rounded-[16px] border border-amber-200/50 text-amber-800 text-[12px]">
-                <span class="material-symbols-outlined text-[20px] text-amber-600 shrink-0 font-normal">menu_book</span>
-                <p>
-                  Butuh informasi lebih detail? Silakan klik tab <strong class="text-[#003ada]">Panduan</strong> pada bilah menu samping (sidebar) kapan saja.
-                </p>
-              </div>
-            </div>
-          `,
-          confirmButtonColor: "#003ada",
-          confirmButtonText: "Mulai Platform",
-          customClass: {
-            popup: "rounded-[24px] font-[var(--font-inter)] p-6 md:p-8 max-w-[500px]",
-          }
-        });
-      }
-    }
-  }, []);
 
   const handleNewAssessment = () => {
+    // Check if at least one telematics provider is connected
+    const connectedList = getStoredIntegrations().filter(i => i.connected);
+    if (connectedList.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Koneksi Telematika Diperlukan",
+        text: "Silakan hubungkan minimal satu layanan telematika di menu Integrasi terlebih dahulu untuk menjalankan AI Scoring.",
+        confirmButtonColor: "#003ada",
+        confirmButtonText: "Ke Menu Integrasi",
+        showCancelButton: true,
+        cancelButtonText: "Batal",
+        customClass: {
+          popup: "rounded-[24px] font-[var(--font-inter)]",
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/integration");
+        }
+      });
+      return;
+    }
+
     Swal.fire({
       title: "Penilaian Risiko Baru",
       html: `
@@ -149,9 +131,11 @@ export default function DashboardPage() {
                   joinDate: "Juni 2026"
                 };
 
-                const updatedList = [newCustomer, ...customerList];
-                setCustomerList(updatedList);
-                saveStoredCustomers(updatedList);
+                setCustomerList((prevList) => {
+                  const updatedList = [newCustomer, ...prevList];
+                  saveStoredCustomers(updatedList);
+                  return updatedList;
+                });
 
                 Swal.fire({
                   icon: "success",
@@ -178,6 +162,63 @@ export default function DashboardPage() {
       }
     });
   };
+
+  useEffect(() => {
+    setCustomerList(getStoredCustomers());
+
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("newAssessment") === "true") {
+        // Clear parameter from URL to prevent showing again on refresh
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+        // Automatically open the assessment form!
+        handleNewAssessment();
+      } else {
+        const welcomeShown = sessionStorage.getItem("tf_welcome_shown");
+        if (!welcomeShown) {
+          sessionStorage.setItem("tf_welcome_shown", "true");
+          Swal.fire({
+            title: "Selamat Datang di TrustFleet AI!",
+            html: `
+              <div class="space-y-4 font-[var(--font-inter)] text-left text-[#444655] leading-relaxed text-[14px] mt-2">
+                <p>
+                  Platform Penilaian Risiko Kredit Alternatif berbasis AI untuk menyederhanakan pembiayaan logistik dengan wawasan telematika yang dapat dijelaskan.
+                </p>
+                <div class="bg-[#eff4ff]/60 p-4 rounded-[20px] border border-[#003ada]/10 space-y-3">
+                  <h5 class="font-bold text-[#0b1c30] text-[12px] uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-[#003ada]">explore</span>
+                    Langkah Awal Konfigurasi:
+                  </h5>
+                  <p class="text-[12px] text-[#444655] leading-relaxed">
+                    Untuk menggunakan fitur penilaian risiko secara real-time, Anda wajib menghubungkan minimal **satu layanan telematika** (Samsara, Geotab, atau Webfleet) terlebih dahulu.
+                  </p>
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-amber-50 rounded-[16px] border border-amber-200/50 text-amber-800 text-[12px]">
+                  <span class="material-symbols-outlined text-[20px] text-amber-600 shrink-0 font-normal">info</span>
+                  <p>
+                    Sistem mendeteksi belum ada telematika yang aktif. Silakan menuju ke halaman **Integrasi** untuk memulai.
+                  </p>
+                </div>
+              </div>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: "#003ada",
+            cancelButtonColor: "#747687",
+            confirmButtonText: "Hubungkan Integrasi Sekarang",
+            cancelButtonText: "Lihat Dashboard Dulu",
+            customClass: {
+              popup: "rounded-[24px] font-[var(--font-inter)] p-6 md:p-8 max-w-[500px]",
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              router.push("/integration");
+            }
+          });
+        }
+      }
+    }
+  }, []);
 
   const dashboardCustomers = customerList.slice(0, 4);
 
